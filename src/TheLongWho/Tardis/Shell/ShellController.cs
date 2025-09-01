@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using TheLongWho.Tardis.Flight;
 using TheLongWho.Tardis.Interior;
 using TheLongWho.Tardis.System;
@@ -18,6 +14,10 @@ namespace TheLongWho.Tardis.Shell
 		internal Transform exitPoint { get; private set; }
 		internal seatscript fakeSeat { get; private set; }
 
+		private Material _lampMaterial;
+		private Color _lampStartColor;
+		private Coroutine _lampFlashRoutine;
+
 		private void Start()
 		{
 			SpawnInterior();
@@ -31,6 +31,13 @@ namespace TheLongWho.Tardis.Shell
 			visszarako.importantUnderMapLook = true;
 			visszarako.RB = GetComponent<Rigidbody>();
 			visszarako.rb = true;
+
+			// Set up lamp.
+			Transform lamp = transform.Find("Base/Pillars/Ceiling/Roof/Lamp Base/Lamp Bottom/Lamp Lens");
+			Renderer lampRenderer = lamp.GetComponent<Renderer>();
+			_lampMaterial = lampRenderer.material;
+			_lampMaterial.SetFloat("_EMISSION", 1f);
+			_lampStartColor = _lampMaterial.color;
 
 			// Set up all systems.
 			gameObject.AddComponent<FlightSystem>();
@@ -71,6 +78,43 @@ namespace TheLongWho.Tardis.Shell
 		public bool CanExit()
 		{
 			return true;
+		}
+
+		public void StartLampFlash(float speed = 2f)
+		{
+			if (_lampFlashRoutine != null)
+				StopCoroutine(_lampFlashRoutine);
+			_lampFlashRoutine = StartCoroutine(LampFlashRoutine(speed));
+		}
+
+		public void StopLampFlash()
+		{
+			if (_lampFlashRoutine != null)
+			{
+				StopCoroutine(_lampFlashRoutine);
+				_lampFlashRoutine = null;
+			}
+
+			_lampMaterial.SetColor("_EmissionColor", Color.black);
+			_lampMaterial.color = _lampStartColor;
+		}
+
+		private IEnumerator LampFlashRoutine(float flashSpeed)
+		{
+			float t = 0f;
+
+			while (true)
+			{
+				t += Time.deltaTime * flashSpeed;
+				float lerp = Mathf.PingPong(t, 1f);
+
+				Color current = Color.Lerp(Color.grey, Color.white, lerp);
+				_lampMaterial.SetColor("_EmissionColor", current);
+				current = Color.Lerp(_lampStartColor, Color.white, lerp);
+				_lampMaterial.color = current;
+
+				yield return null;
+			}
 		}
 	}
 }

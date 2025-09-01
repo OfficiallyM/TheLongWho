@@ -74,6 +74,7 @@ namespace TheLongWho.Tardis.Flight
 			fpscontroller player = mainscript.M.player;
 			player.camView = false;
 			player.GetOut(_shell.transform.TransformPoint(_lastPosition), true);
+			_shell.StopLampFlash();
 			StateManager.InFlight = false;
 		}
 
@@ -104,6 +105,11 @@ namespace TheLongWho.Tardis.Flight
 				{
 					_velocity = _rb.velocity;
 					_angularVelocity = _rb.angularVelocity;
+					_shell.StartLampFlash();
+				}
+				else
+				{
+					_shell.StopLampFlash();
 				}
 			}
 
