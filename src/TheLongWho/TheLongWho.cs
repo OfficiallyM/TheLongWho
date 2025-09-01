@@ -18,12 +18,15 @@ namespace TheLongWho
 		public override bool LoadInDB => true;
 		public override bool EchoToGameLog => true;
 		public override bool UseLogger => true;
+		public override bool UseHarmony => true;
 
 		internal static TheLongWho I;
 
 		private static bool _areAssetsLoaded = false;
 		internal GameObject Shell;
 		internal GameObject Interior;
+
+		internal event Action<RaycastHit> onLookAt;
 
 		public TheLongWho()
 		{
@@ -50,8 +53,8 @@ namespace TheLongWho
 			if (Physics.Raycast(mainscript.M.player.Cam.transform.position, mainscript.M.player.Cam.transform.forward, out hitInfo, mainscript.M.player.FrayRange, (int)mainscript.M.player.useLayer))
 			{
 				InteriorController interior = hitInfo.transform.GetComponentInParent<InteriorController>();
-				ShellController shell = hitInfo.transform.root.GetComponent<ShellController>();
-				if (interior != null && hitInfo.collider.name == "TardisExit")
+				ShellController shell = hitInfo.transform.GetComponent<ShellController>();
+				if (interior != null && hitInfo.collider.name == "TardisExit" && interior.shell.CanExit())
 				{
 					player.E = "Exit TARDIS";
 					player.BcanE = true;
@@ -59,13 +62,19 @@ namespace TheLongWho
 					if (Input.GetKeyDown(KeyCode.E))
 						interior.shell.Exit();
 				}
-				else if (shell != null)
+				else if (shell != null && shell.CanEnter())
 				{
 					player.E = "Enter TARDIS";
 					player.BcanE = true;
 
 					if (Input.GetKeyDown(KeyCode.E))
 						shell.Enter();
+				}
+				else
+				{
+					shell = hitInfo.transform.root.GetComponent<ShellController>();
+					if (shell != null)
+						onLookAt?.Invoke(hitInfo);
 				}
 			}
 
