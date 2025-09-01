@@ -1,8 +1,8 @@
-﻿using TheLongWho.Tardis.Shell;
+﻿using System;
+using TheLongWho.Tardis.Shell;
 using TheLongWho.Tardis.System;
 using TheLongWho.Utilities;
 using UnityEngine;
-using static snTempPlayerSync;
 
 namespace TheLongWho.Tardis.Flight
 {
@@ -17,15 +17,15 @@ namespace TheLongWho.Tardis.Flight
 		private Vector3 _lastPosition;
 		private bool _justToggled = false;
 
-		private float thrustForce = 40f;
-		private float verticalForce = 20f;
-		private float drag = 0.98f;
-		private float boostModifier = 2f;
-		private bool spin = true;
-		private bool boost = false;
+		private float _thrustForce = 40f;
+		private float _verticalForce = 20f;
+		private float _drag = 0.98f;
+		private float _boostModifier = 2f;
+		private bool _spin = true;
+		private bool _boost = false;
 
-		private Vector3 velocity;
-		private Vector3 angularVelocity;
+		private Vector3 _velocity;
+		private Vector3 _angularVelocity;
 		private Quaternion _currentTilt = Quaternion.identity;
 
 		private void Start()
@@ -55,7 +55,7 @@ namespace TheLongWho.Tardis.Flight
 		public void Activate()
 		{
 			fpscontroller player = mainscript.M.player;
-			_lastPosition = player.transform.position;
+			_lastPosition = _shell.transform.InverseTransformPoint(player.transform.position);
 			player.transform.position = transform.position + Vector3.up * 1f;
 			_shell.fakeSeat.RB = null;
 			player.GetIn(_shell.fakeSeat);
@@ -63,7 +63,6 @@ namespace TheLongWho.Tardis.Flight
 			StateManager.InFlight = true;
 
 			IsActive = true;
-			Logging.Log("Flight activated");
 		}
 
 		public void Deactivate()
@@ -74,10 +73,8 @@ namespace TheLongWho.Tardis.Flight
 
 			fpscontroller player = mainscript.M.player;
 			player.camView = false;
-			player.GetOut(_lastPosition, true);
+			player.GetOut(_shell.transform.TransformPoint(_lastPosition), true);
 			StateManager.InFlight = false;
-
-			Logging.Log("Flight deactivated");
 		}
 
 		public void Tick()
@@ -103,74 +100,79 @@ namespace TheLongWho.Tardis.Flight
 			if (Input.GetKeyDown(KeyCode.F))
 			{
 				_rb.useGravity = !_rb.useGravity;
-				return;
+				if (!_rb.useGravity)
+				{
+					_velocity = _rb.velocity;
+					_angularVelocity = _rb.angularVelocity;
+				}
 			}
-
 
 			if (!_rb.useGravity)
 			{
 				if (Input.GetKeyDown(KeyCode.R))
 				{
-					spin = !spin;
+					_spin = !_spin;
 				}
 			}
 		}
 
 		public void FixedTick()
 		{
-			// Disable movement if gravity is enabled.
-			if (_rb.useGravity) return;
-
 			fpscontroller player = mainscript.M.player;
 			Transform cam = player.CamParent;
-
-			// Flatten camera direction to just XZ plane.
-			Vector3 camForward = cam.forward;
-			camForward.y = 0;
-			camForward.Normalize();
-
-			Vector3 camRight = cam.right;
-			camRight.y = 0;
-			camRight.Normalize();
-
-			// Movement input.
-			boost = Input.GetKey(KeyCode.LeftShift);
-			float boostForce = boost ? boostModifier : 1f;
-
 			bool shouldTilt = false;
-			if (Input.GetKey(KeyCode.W))
-			{
-				velocity += camForward * thrustForce * boostForce * Time.deltaTime;
-				shouldTilt = true;
-			}
-			if (Input.GetKey(KeyCode.S))
-			{
-				velocity -= camForward * thrustForce * boostForce * Time.deltaTime;
-				shouldTilt = true;
-			}
-			if (Input.GetKey(KeyCode.A))
-			{
-				velocity -= camRight * thrustForce * boostForce * Time.deltaTime;
-				shouldTilt = true;
-			}
-			if (Input.GetKey(KeyCode.D))
-			{
-				velocity += camRight * thrustForce * boostForce * Time.deltaTime;
-				shouldTilt = true;
-			}
-			if (Input.GetKey(KeyCode.Space))
-				velocity += Vector3.up * verticalForce * boostForce * Time.deltaTime;
-			if (Input.GetKey(KeyCode.LeftControl))
-				velocity += Vector3.down * verticalForce * boostForce * Time.deltaTime;
+			bool shouldSpin = _spin && !_rb.useGravity;
 
-			// Apply drag and velocity.
-			velocity *= drag;
-			_rb.velocity = velocity;
+			// Disable movement if gravity is enabled.
+			if (!_rb.useGravity)
+			{
+				// Flatten camera direction to just XZ plane.
+				Vector3 camForward = cam.forward;
+				camForward.y = 0;
+				camForward.Normalize();
+
+				Vector3 camRight = cam.right;
+				camRight.y = 0;
+				camRight.Normalize();
+
+				// Movement input.
+				_boost = Input.GetKey(KeyCode.LeftShift);
+				float boostForce = _boost ? _boostModifier : 1f;
+
+				if (Input.GetKey(KeyCode.W))
+				{
+					_velocity += camForward * _thrustForce * boostForce * Time.deltaTime;
+					shouldTilt = true;
+				}
+				if (Input.GetKey(KeyCode.S))
+				{
+					_velocity -= camForward * _thrustForce * boostForce * Time.deltaTime;
+					shouldTilt = true;
+				}
+				if (Input.GetKey(KeyCode.A))
+				{
+					_velocity -= camRight * _thrustForce * boostForce * Time.deltaTime;
+					shouldTilt = true;
+				}
+				if (Input.GetKey(KeyCode.D))
+				{
+					_velocity += camRight * _thrustForce * boostForce * Time.deltaTime;
+					shouldTilt = true;
+				}
+				if (Input.GetKey(KeyCode.Space))
+					_velocity += Vector3.up * _verticalForce * boostForce * Time.deltaTime;
+				if (Input.GetKey(KeyCode.LeftControl))
+					_velocity += Vector3.down * _verticalForce * boostForce * Time.deltaTime;
+
+				// Apply drag and velocity.
+				_velocity *= _drag;
+				_rb.velocity = _velocity;
+			}
 
 			// Spin yaw.
-			float spinTarget = spin ? (boost ? 50f : 25f) : 0f;
-			angularVelocity.y = Mathf.Lerp(angularVelocity.y, spinTarget, Time.fixedDeltaTime * 10f);
-			float spinAngle = angularVelocity.y * Time.fixedDeltaTime;
+			float spinTarget = shouldSpin ? (_boost ? 50f : 25f) : 0f;
+			_angularVelocity.y = Mathf.Lerp(_angularVelocity.y, spinTarget, Time.fixedDeltaTime * 10f);
+			float spinAngle = _angularVelocity.y * Time.fixedDeltaTime;
 			Quaternion spinRotation = Quaternion.Euler(0f, spinAngle, 0f);
 
 			// Base upright rotation (yaw only).
@@ -184,7 +186,7 @@ namespace TheLongWho.Tardis.Flight
 
 			if (shouldTilt)
 			{
-				float tiltMax = boost ? 60f : 50f;
+				float tiltMax = _boost ? 60f : 50f;
 
 				// Local velocity in XZ.
 				Vector3 flatVel = new Vector3(localVel.x, 0f, localVel.z);
