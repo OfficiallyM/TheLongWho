@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 193358276
+CRC: 1045247111
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: cc351aca77ad94e2291a46f28ed3f257
+    Hash: 79f71fb813326a02086bc74b4b47c069
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 1159e951986d1f78745c8f3e91fe4b4e
+    Hash: 80aaea858b5a48a01cebb76f7818ac24
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -33,12 +33,17 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 74
   Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
 - Class: 134
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Tardis/Interiors/type30.prefab
 - Assets/Tardis/Interiors/type30.fbx
+- Assets/Tardis/Sound/mat.wav
+- Assets/Tardis/Sound/demat.wav
 - Assets/Tardis/Shells/TARDIS.fbx
 - Assets/Tardis/Shells/TARDIS.prefab
+- Assets/Tardis/Sound/flight.wav
 Dependencies: []

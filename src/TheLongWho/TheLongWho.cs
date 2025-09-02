@@ -23,6 +23,9 @@ namespace TheLongWho
 		private static bool _areAssetsLoaded = false;
 		internal GameObject Shell;
 		internal GameObject Interior;
+		internal AudioClip MaterialiseClip;
+		internal AudioClip DematerialiseClip;
+		internal AudioClip FlightClip;
 
 		public TheLongWho()
 		{
@@ -35,10 +38,16 @@ namespace TheLongWho
 			AssetBundle bundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream($"{nameof(TheLongWho)}.thelongwho"));
 			Shell = bundle.LoadAsset<GameObject>("tardis.prefab");
 			Shell.AddComponent<ShellController>();
+
 			Interior = bundle.LoadAsset<GameObject>("type30.prefab");
 			Interior.AddComponent<InteriorController>();
 			ShellController.InteriorPrefab = Interior;
-			
+
+			MaterialiseClip = bundle.LoadAsset<AudioClip>("mat.wav");
+			DematerialiseClip = bundle.LoadAsset<AudioClip>("demat.wav");
+			FlightClip = bundle.LoadAsset<AudioClip>("flight.wav");
+
+			bundle.Unload(false);
 			_areAssetsLoaded = true;
 		}
 

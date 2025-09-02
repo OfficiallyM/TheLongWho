@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using TheLongWho.Tardis.Audio;
 using TheLongWho.Tardis.Flight;
 using TheLongWho.Tardis.Interior;
 using TheLongWho.Tardis.Stabiliser;
@@ -13,6 +14,7 @@ namespace TheLongWho.Tardis.Shell
 	{
 		public static GameObject InteriorPrefab;
 		public InteriorController Interior;
+		public AudioController Audio;
 		public Transform ExitPoint { get; private set; }
 		public seatscript FakeSeat { get; private set; }
 		public event Action<RaycastHit> OnLookAt;
@@ -28,6 +30,13 @@ namespace TheLongWho.Tardis.Shell
 			Transform seat = transform.Find("Seat");
 			FakeSeat = seat.gameObject.AddComponent<seatscript>();
 			FakeSeat.sitPos = seat;
+
+			// Register audio.
+			Audio = gameObject.AddComponent<AudioController>();
+			Audio.RegisterClip("flight", TheLongWho.I.FlightClip);
+			Audio.RegisterClip("dematerialise", TheLongWho.I.DematerialiseClip);
+			Audio.RegisterClip("materialise", TheLongWho.I.MaterialiseClip);
+			Audio.RegisterSource("shell", gameObject);
 
 			// This is required to keep the TARDIS in sync with the world when it moves.
 			visszarako visszarako = gameObject.AddComponent<visszarako>();
