@@ -44,6 +44,9 @@ namespace TheLongWho.Tardis.Shell
 			visszarako.RB = GetComponent<Rigidbody>();
 			visszarako.rb = true;
 
+			// Add a dummy tosaveitemscript to allow M-ultiTool to delete the TARDIS.
+			gameObject.AddComponent<tosaveitemscript>();
+
 			// Set up lamp.
 			Transform lamp = transform.Find("Base/Pillars/Ceiling/Roof/Lamp Base/Lamp Bottom/Lamp Lens");
 			Renderer lampRenderer = lamp.GetComponent<Renderer>();
@@ -59,14 +62,10 @@ namespace TheLongWho.Tardis.Shell
 			gameObject.AddComponent<SystemController>().RegisterAllSystems();
 		}
 
-		private void SpawnInterior()
+		private void OnDestroy()
 		{
-			if (Interior != null) return;
-
-			GameObject interior = Instantiate(InteriorPrefab);
-			Interior = interior.GetComponent<InteriorController>();
-			Interior.Shell = this;
-			Interior.SyncPositionToShell();
+			// Destroy interior with shell.
+			Destroy(Interior.gameObject);
 		}
 
 		public void OnLook(RaycastHit hit)
@@ -85,16 +84,6 @@ namespace TheLongWho.Tardis.Shell
 		{
 			if (!CanExit()) return;
 			WorldUtilities.TeleportPlayer(GetSafeExitPoint());
-		}
-
-		private Vector3 GetSafeExitPoint()
-		{
-			Vector3 exitPos = ExitPoint.position;
-
-			if (Vector3.Dot(ExitPoint.up, Vector3.up) < 0.1f)
-				exitPos += Vector3.up * 3f;
-
-			return exitPos;
 		}
 
 		public bool CanEnter()
@@ -125,6 +114,26 @@ namespace TheLongWho.Tardis.Shell
 
 			_lampMaterial.SetColor("_EmissionColor", Color.black);
 			_lampMaterial.color = _lampStartColor;
+		}
+
+		private void SpawnInterior()
+		{
+			if (Interior != null) return;
+
+			GameObject interior = Instantiate(InteriorPrefab);
+			Interior = interior.GetComponent<InteriorController>();
+			Interior.Shell = this;
+			Interior.SyncPositionToShell();
+		}
+
+		private Vector3 GetSafeExitPoint()
+		{
+			Vector3 exitPos = ExitPoint.position;
+
+			if (Vector3.Dot(ExitPoint.up, Vector3.up) < 0.1f)
+				exitPos += Vector3.up * 3f;
+
+			return exitPos;
 		}
 
 		private IEnumerator LampFlashRoutine(float flashSpeed)
