@@ -149,28 +149,28 @@ namespace TheLongWho.Tardis.Flight
 
 				if (Input.GetKey(KeyCode.W))
 				{
-					_velocity += camForward * _thrustForce * boostForce * Time.deltaTime;
+					_velocity += camForward * _thrustForce * boostForce * Time.fixedDeltaTime;
 					shouldTilt = true;
 				}
 				if (Input.GetKey(KeyCode.S))
 				{
-					_velocity -= camForward * _thrustForce * boostForce * Time.deltaTime;
+					_velocity -= camForward * _thrustForce * boostForce * Time.fixedDeltaTime;
 					shouldTilt = true;
 				}
 				if (Input.GetKey(KeyCode.A))
 				{
-					_velocity -= camRight * _thrustForce * boostForce * Time.deltaTime;
+					_velocity -= camRight * _thrustForce * boostForce * Time.fixedDeltaTime;
 					shouldTilt = true;
 				}
 				if (Input.GetKey(KeyCode.D))
 				{
-					_velocity += camRight * _thrustForce * boostForce * Time.deltaTime;
+					_velocity += camRight * _thrustForce * boostForce * Time.fixedDeltaTime;
 					shouldTilt = true;
 				}
 				if (Input.GetKey(KeyCode.Space))
-					_velocity += Vector3.up * _verticalForce * boostForce * Time.deltaTime;
+					_velocity += Vector3.up * _verticalForce * boostForce * Time.fixedDeltaTime;
 				if (Input.GetKey(KeyCode.LeftControl))
-					_velocity += Vector3.down * _verticalForce * boostForce * Time.deltaTime;
+					_velocity += Vector3.down * _verticalForce * boostForce * Time.fixedDeltaTime;
 
 				// Apply drag and velocity.
 				_velocity *= _drag;
