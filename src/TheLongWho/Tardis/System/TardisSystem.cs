@@ -1,5 +1,4 @@
-﻿using TheLongWho.Tardis.Shell;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace TheLongWho.Tardis.System
 {
@@ -8,6 +7,7 @@ namespace TheLongWho.Tardis.System
 		public abstract string Name { get; }
 		public virtual float EnergyUsage => 0f;
 		public bool IsActive { get; set; }
+		public SystemController Systems { get; set; }
 
 		public virtual void Activate()
 		{

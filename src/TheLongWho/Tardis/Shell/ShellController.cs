@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using TheLongWho.Tardis.Flight;
 using TheLongWho.Tardis.Interior;
+using TheLongWho.Tardis.Stabiliser;
 using TheLongWho.Tardis.System;
 using TheLongWho.Utilities;
 using UnityEngine;
@@ -11,8 +13,9 @@ namespace TheLongWho.Tardis.Shell
 	{
 		public static GameObject InteriorPrefab;
 		public InteriorController Interior;
-		internal Transform ExitPoint { get; private set; }
-		internal seatscript FakeSeat { get; private set; }
+		public Transform ExitPoint { get; private set; }
+		public seatscript FakeSeat { get; private set; }
+		public event Action<RaycastHit> OnLookAt;
 
 		private Material _lampMaterial;
 		private Color _lampStartColor;
@@ -41,6 +44,7 @@ namespace TheLongWho.Tardis.Shell
 
 			// Set up all systems.
 			gameObject.AddComponent<FlightSystem>();
+			gameObject.AddComponent<StabiliserSystem>();
 			
 			// System controller is added last so it automatically registers all of the systems.
 			gameObject.AddComponent<SystemController>().RegisterAllSystems();
@@ -54,6 +58,11 @@ namespace TheLongWho.Tardis.Shell
 			Interior = interior.GetComponent<InteriorController>();
 			Interior.Shell = this;
 			Interior.SyncPositionToShell();
+		}
+
+		public void OnLook(RaycastHit hit)
+		{
+			OnLookAt?.Invoke(hit);
 		}
 
 		public void Enter()

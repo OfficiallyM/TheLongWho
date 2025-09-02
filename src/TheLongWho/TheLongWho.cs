@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 using TheLongWho.Tardis.Interior;
 using TheLongWho.Tardis.Shell;
 using TLDLoader;
@@ -25,8 +23,6 @@ namespace TheLongWho
 		private static bool _areAssetsLoaded = false;
 		internal GameObject Shell;
 		internal GameObject Interior;
-
-		internal event Action<RaycastHit> onLookAt;
 
 		public TheLongWho()
 		{
@@ -73,8 +69,7 @@ namespace TheLongWho
 				else
 				{
 					shell = hitInfo.transform.root.GetComponent<InteriorController>()?.Shell;
-					if (shell != null)
-						onLookAt?.Invoke(hitInfo);
+					shell?.OnLook(hitInfo);
 				}
 			}
 

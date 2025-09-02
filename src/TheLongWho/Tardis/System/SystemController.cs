@@ -12,6 +12,7 @@ namespace TheLongWho.Tardis.System
 
 		public void RegisterSystem(TardisSystem system)
 		{
+			system.Systems = this;
 			_systems.Add(system);
 			Logging.Log($"Registered system {system.Name}");
 		}
