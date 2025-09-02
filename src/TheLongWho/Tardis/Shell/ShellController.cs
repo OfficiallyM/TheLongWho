@@ -11,8 +11,8 @@ namespace TheLongWho.Tardis.Shell
 	{
 		public static GameObject InteriorPrefab;
 		public InteriorController Interior;
-		internal Transform exitPoint { get; private set; }
-		internal seatscript fakeSeat { get; private set; }
+		internal Transform ExitPoint { get; private set; }
+		internal seatscript FakeSeat { get; private set; }
 
 		private Material _lampMaterial;
 		private Color _lampStartColor;
@@ -21,10 +21,10 @@ namespace TheLongWho.Tardis.Shell
 		private void Start()
 		{
 			SpawnInterior();
-			exitPoint = transform.Find("ExitPoint");
+			ExitPoint = transform.Find("ExitPoint");
 			Transform seat = transform.Find("Seat");
-			fakeSeat = seat.gameObject.AddComponent<seatscript>();
-			fakeSeat.sitPos = seat;
+			FakeSeat = seat.gameObject.AddComponent<seatscript>();
+			FakeSeat.sitPos = seat;
 
 			// This is required to keep the TARDIS in sync with the world when it moves.
 			visszarako visszarako = gameObject.AddComponent<visszarako>();
@@ -51,22 +51,22 @@ namespace TheLongWho.Tardis.Shell
 			if (Interior != null) return;
 
 			GameObject interior = Instantiate(InteriorPrefab);
-			interior.transform.parent = transform;
-			interior.transform.localPosition = new Vector3 (0, -100, 0);
 			Interior = interior.GetComponent<InteriorController>();
-			Interior.shell = this;
+			Interior.Shell = this;
+			Interior.SyncPositionToShell();
 		}
 
 		public void Enter()
 		{
 			if (!CanEnter()) return;
-			WorldUtilities.TeleportPlayer(Interior.enterPoint.position + Vector3.up * 2f);
+			Interior.SyncPositionToShell();
+			WorldUtilities.TeleportPlayer(Interior.EnterPoint.position + Vector3.up * 2f);
 		}
 
 		public void Exit()
 		{
 			if (!CanExit()) return;
-			WorldUtilities.TeleportPlayer(exitPoint.position);
+			WorldUtilities.TeleportPlayer(ExitPoint.position);
 		}
 
 		public bool CanEnter()

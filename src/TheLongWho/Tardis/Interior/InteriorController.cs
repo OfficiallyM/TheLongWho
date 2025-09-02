@@ -1,21 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TheLongWho.Tardis.Shell;
+﻿using TheLongWho.Tardis.Shell;
 using UnityEngine;
 
 namespace TheLongWho.Tardis.Interior
 {
 	internal class InteriorController : MonoBehaviour
 	{
-		internal ShellController shell;
-		internal Transform enterPoint { get; private set; }
+		internal ShellController Shell;
+		internal Transform EnterPoint { get; private set; }
 
 		private void Start()
 		{
-			enterPoint = transform.Find("EnterPoint");
+			EnterPoint = transform.Find("EnterPoint");
+		}
+
+		public void SyncPositionToShell()
+		{
+			// Offset directly below shell.
+			Vector3 offset = Vector3.down * 1000f;
+
+			// Use yaw-only rotation so interior doesn't tilt with shell.
+			Quaternion yawOnly = Quaternion.Euler(0f, Shell.transform.eulerAngles.y, 0f);
+
+			transform.position = Shell.transform.position + yawOnly * offset;
+			transform.rotation = yawOnly;
 		}
 	}
 }

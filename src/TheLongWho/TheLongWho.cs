@@ -54,13 +54,13 @@ namespace TheLongWho
 			{
 				InteriorController interior = hitInfo.transform.GetComponentInParent<InteriorController>();
 				ShellController shell = hitInfo.transform.GetComponent<ShellController>();
-				if (interior != null && hitInfo.collider.name == "TardisExit" && interior.shell.CanExit())
+				if (interior != null && hitInfo.collider.name == "TardisExit" && interior.Shell.CanExit())
 				{
 					player.E = "Exit TARDIS";
 					player.BcanE = true;
 
 					if (Input.GetKeyDown(KeyCode.E))
-						interior.shell.Exit();
+						interior.Shell.Exit();
 				}
 				else if (shell != null && shell.CanEnter())
 				{
@@ -72,7 +72,7 @@ namespace TheLongWho
 				}
 				else
 				{
-					shell = hitInfo.transform.root.GetComponent<ShellController>();
+					shell = hitInfo.transform.root.GetComponent<InteriorController>()?.Shell;
 					if (shell != null)
 						onLookAt?.Invoke(hitInfo);
 				}

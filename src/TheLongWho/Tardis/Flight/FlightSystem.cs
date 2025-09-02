@@ -1,4 +1,5 @@
 ﻿using System;
+using TheLongWho.Tardis.Interior;
 using TheLongWho.Tardis.Shell;
 using TheLongWho.Tardis.System;
 using TheLongWho.Utilities;
@@ -55,10 +56,10 @@ namespace TheLongWho.Tardis.Flight
 		public void Activate()
 		{
 			fpscontroller player = mainscript.M.player;
-			_lastPosition = _shell.transform.InverseTransformPoint(player.transform.position);
+			_lastPosition = _shell.Interior.transform.InverseTransformPoint(player.transform.position);
 			player.transform.position = transform.position + Vector3.up * 1f;
-			_shell.fakeSeat.RB = null;
-			player.GetIn(_shell.fakeSeat);
+			_shell.FakeSeat.RB = null;
+			player.GetIn(_shell.FakeSeat);
 			_shell.Interior.gameObject.SetActive(false);
 			StateManager.InFlight = true;
 
@@ -68,12 +69,13 @@ namespace TheLongWho.Tardis.Flight
 		public void Deactivate()
 		{
 			_shell.Interior.gameObject.SetActive(true);
+			_shell.Interior.SyncPositionToShell();
 			_rb.useGravity = true;
 			IsActive = false;
 
 			fpscontroller player = mainscript.M.player;
 			player.camView = false;
-			player.GetOut(_shell.transform.TransformPoint(_lastPosition), true);
+			player.GetOut(_shell.Interior.transform.TransformPoint(_lastPosition), true);
 			_shell.StopLampFlash();
 			StateManager.InFlight = false;
 		}
@@ -192,7 +194,7 @@ namespace TheLongWho.Tardis.Flight
 
 			if (shouldTilt)
 			{
-				float tiltMax = _boost ? 60f : 50f;
+				float tiltMax = _boost ? 50f : 40f;
 
 				// Local velocity in XZ.
 				Vector3 flatVel = new Vector3(localVel.x, 0f, localVel.z);
