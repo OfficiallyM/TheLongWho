@@ -66,7 +66,17 @@ namespace TheLongWho.Tardis.Shell
 		public void Exit()
 		{
 			if (!CanExit()) return;
-			WorldUtilities.TeleportPlayer(ExitPoint.position);
+			WorldUtilities.TeleportPlayer(GetSafeExitPoint());
+		}
+
+		private Vector3 GetSafeExitPoint()
+		{
+			Vector3 exitPos = ExitPoint.position;
+
+			if (Vector3.Dot(ExitPoint.up, Vector3.up) < 0.1f)
+				exitPos += Vector3.up * 3f;
+
+			return exitPos;
 		}
 
 		public bool CanEnter()

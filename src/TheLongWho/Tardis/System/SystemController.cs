@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using TheLongWho.Utilities;
 using UnityEngine;
 
@@ -7,17 +8,37 @@ namespace TheLongWho.Tardis.System
 	internal class SystemController : MonoBehaviour
 	{
 		//private float _energy = 100f;
-		private List<ISystem> _systems = new List<ISystem>();
+		private List<TardisSystem> _systems = new List<TardisSystem>();
 
-		public void RegisterSystem(ISystem system)
+		public void RegisterSystem(TardisSystem system)
 		{
 			_systems.Add(system);
 			Logging.Log($"Registered system {system.Name}");
 		}
 
+		public void RegisterAllSystems()
+		{
+			foreach (var sys in GetComponentsInChildren<TardisSystem>())
+			{
+				RegisterSystem(sys);
+			}
+		}
+
+		public void EnableSystem<T>() where T : TardisSystem
+		{
+			TardisSystem system = _systems.OfType<T>().FirstOrDefault();
+			system?.Activate();
+		}
+
+		public void DisableSystem<T>() where T : TardisSystem
+		{
+			TardisSystem system = _systems.OfType<T>().FirstOrDefault();
+			system?.Deactivate();
+		}
+
 		private void Update()
 		{
-			foreach (ISystem system in _systems)
+			foreach (TardisSystem system in _systems)
 			{
 				if (!system.IsActive) continue;
 				system.Tick();
@@ -26,18 +47,10 @@ namespace TheLongWho.Tardis.System
 
 		private void FixedUpdate()
 		{
-			foreach (ISystem system in _systems)
+			foreach (TardisSystem system in _systems)
 			{
 				if (!system.IsActive) continue;
 				system.FixedTick();
-			}
-		}
-
-		public void RegisterAllSystems()
-		{
-			foreach (var sys in GetComponentsInChildren<ISystem>())
-			{
-				RegisterSystem(sys);
 			}
 		}
 	}

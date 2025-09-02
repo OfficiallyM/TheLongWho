@@ -7,11 +7,10 @@ using UnityEngine;
 
 namespace TheLongWho.Tardis.Flight
 {
-	internal class FlightSystem : MonoBehaviour, ISystem
+	internal class FlightSystem : TardisSystem
 	{
-		public string Name => "Flight";
-		public bool IsActive { get; private set; }
-		public float EnergyUsage => 2f;
+		public override string Name => "Flight";
+		public override float EnergyUsage => 2f;
 
 		private ShellController _shell;
 		private Rigidbody _rb;
@@ -53,7 +52,7 @@ namespace TheLongWho.Tardis.Flight
 			}
 		}
 
-		public void Activate()
+		public override void Activate()
 		{
 			fpscontroller player = mainscript.M.player;
 			_lastPosition = _shell.Interior.transform.InverseTransformPoint(player.transform.position);
@@ -66,7 +65,7 @@ namespace TheLongWho.Tardis.Flight
 			IsActive = true;
 		}
 
-		public void Deactivate()
+		public override void Deactivate()
 		{
 			_shell.Interior.gameObject.SetActive(true);
 			_shell.Interior.SyncPositionToShell();
@@ -80,7 +79,7 @@ namespace TheLongWho.Tardis.Flight
 			StateManager.InFlight = false;
 		}
 
-		public void Tick()
+		public override void Tick()
 		{
 			fpscontroller player = mainscript.M.player;
 
@@ -124,7 +123,7 @@ namespace TheLongWho.Tardis.Flight
 			}
 		}
 
-		public void FixedTick()
+		public override void FixedTick()
 		{
 			fpscontroller player = mainscript.M.player;
 			Transform cam = player.CamParent;
