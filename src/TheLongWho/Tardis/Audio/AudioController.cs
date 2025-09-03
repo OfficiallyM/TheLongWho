@@ -13,6 +13,24 @@ namespace TheLongWho.Tardis.Audio
 	{
 		private Dictionary<string, AudioSource> _sources = new Dictionary<string, AudioSource>();
 		private Dictionary<string, AudioClip> _clips = new Dictionary<string, AudioClip>();
+		private bool _isPaused = false;
+
+		private void Update()
+		{
+			// Handle pausing audio when game is paused.
+			bool paused = !mainscript.M.crsrLocked;
+
+			if (paused && !_isPaused)
+			{
+				PauseAll();
+				_isPaused = true;
+			}
+			else if (!paused && _isPaused)
+			{
+				UnpauseAll();
+				_isPaused = false;
+			}
+		}
 
 		public void RegisterSource(string name, GameObject obj)
 		{
@@ -95,6 +113,18 @@ namespace TheLongWho.Tardis.Audio
 			}
 			source.volume = 0f;
 			source.Stop();
+		}
+
+		private void PauseAll()
+		{
+			foreach (var s in _sources.Values)
+				if (s.isPlaying) s.Pause();
+		}
+
+		private void UnpauseAll()
+		{
+			foreach (var s in _sources.Values)
+				s.UnPause();
 		}
 	}
 }
