@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections;
+using TheLongWho.Save;
 using TheLongWho.Tardis.Audio;
 using TheLongWho.Tardis.Flight;
 using TheLongWho.Tardis.Interior;
@@ -10,11 +12,13 @@ using UnityEngine;
 
 namespace TheLongWho.Tardis.Shell
 {
-	internal class ShellController : MonoBehaviour
+	internal class ShellController : MonoBehaviour, ISaveable
 	{
+		public string SaveKey => "Shell";
 		public static GameObject InteriorPrefab;
 		public InteriorController Interior;
 		public AudioController Audio;
+		public SaveController SaveController;
 		public Transform ExitPoint { get; private set; }
 		public seatscript FakeSeat { get; private set; }
 		public event Action<RaycastHit> OnLookAt;
@@ -22,6 +26,13 @@ namespace TheLongWho.Tardis.Shell
 		private Material _lampMaterial;
 		private Color _lampStartColor;
 		private Coroutine _lampFlashRoutine;
+
+		private ShellSave _shellSave = new ShellSave();
+
+		private void Awake()
+		{
+			SaveController = gameObject.AddComponent<SaveController>();
+		}
 
 		private void Start()
 		{
@@ -60,12 +71,30 @@ namespace TheLongWho.Tardis.Shell
 			
 			// System controller is added last so it automatically registers all of the systems.
 			gameObject.AddComponent<SystemController>().RegisterAllSystems();
+
+			SaveController.RefetchSaveables();
+
+			// Player saved inside, spawn them outside.
+			if (_shellSave.IsInside)
+				WorldUtilities.TeleportPlayerSafe(GetSafeExitPoint());
+
+			// Trigger a manual save.
+			SaveManager.Save(SaveController, true);
 		}
 
 		private void OnDestroy()
 		{
 			// Destroy interior with shell.
 			Destroy(Interior.gameObject);
+		}
+
+		public object GetSaveData() => _shellSave;
+		
+		public void LoadSaveData(object data)
+		{
+			ShellSave shellSave = (data as JObject)?.ToObject<ShellSave>();
+			if (shellSave == null) return;
+			_shellSave = shellSave;
 		}
 
 		public void OnLook(RaycastHit hit)
@@ -76,6 +105,8 @@ namespace TheLongWho.Tardis.Shell
 		public void Enter()
 		{
 			if (!CanEnter()) return;
+			_shellSave.IsInside = true;
+			SaveManager.Save(SaveController, true);
 			Interior.SyncPositionToShell();
 			WorldUtilities.TeleportPlayer(Interior.EnterPoint.position + Vector3.up * 2f);
 		}
@@ -83,6 +114,8 @@ namespace TheLongWho.Tardis.Shell
 		public void Exit()
 		{
 			if (!CanExit()) return;
+			_shellSave.IsInside = false;
+			SaveManager.Save(SaveController, true);
 			WorldUtilities.TeleportPlayer(GetSafeExitPoint());
 		}
 

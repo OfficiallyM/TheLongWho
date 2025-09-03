@@ -32,5 +32,13 @@ namespace TheLongWho.Utilities
 			mainscript.M.player.Tb.eulerAngles = new Vector3(0.0f, _rot.y, 0.0f);
 		}
 		public static void TeleportPlayerWithParent(Vector3 _upos) => mainscript.M.player.transform.root.position += _upos - mainscript.M.player.transform.position;
+
+		public static void TeleportPlayerSafe(Vector3 _upos) => TeleportPlayerSafe(_upos, mainscript.M.player.Tb.eulerAngles);
+		public static void TeleportPlayerSafe(Vector3 _upos, Vector3 _rot)
+		{
+			mainscript.M.player.RB.velocity = Vector3.zero;
+			mainscript.M.player.lastVelocity = 0;
+			TeleportPlayer(_upos, _rot);
+		}
 	}
 }

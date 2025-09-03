@@ -1,8 +1,13 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using TheLongWho.Save;
 using TheLongWho.Tardis.Interior;
 using TheLongWho.Tardis.Shell;
+using TheLongWho.Utilities;
 using TLDLoader;
 using UnityEngine;
+using static settingsscript;
 
 namespace TheLongWho
 {
@@ -27,6 +32,11 @@ namespace TheLongWho
 		internal AudioClip DematerialiseClip;
 		internal AudioClip FlightClip;
 
+		public event Action OnCacheRebuild;
+		private float _nextCacheUpdate = 2f;
+
+		private GameObject[] _toLoad = new GameObject[0];
+
 		public TheLongWho()
 		{
 			I = this;
@@ -35,9 +45,11 @@ namespace TheLongWho
 		public override void DbLoad()
 		{
 			if (_areAssetsLoaded) return;
+			List<GameObject> toLoad = new List<GameObject>();
 			AssetBundle bundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream($"{nameof(TheLongWho)}.thelongwho"));
 			Shell = bundle.LoadAsset<GameObject>("tardis.prefab");
 			Shell.AddComponent<ShellController>();
+			toLoad.Add(Shell);
 
 			Interior = bundle.LoadAsset<GameObject>("type30.prefab");
 			Interior.AddComponent<InteriorController>();
@@ -49,10 +61,26 @@ namespace TheLongWho
 
 			bundle.Unload(false);
 			_areAssetsLoaded = true;
+
+			_toLoad = toLoad.ToArray();
+			SaveManager.Init();
+		}
+
+		public override void OnLoad()
+		{
+			SaveManager.LoadAll(_toLoad);
 		}
 
 		public override void Update()
 		{
+			// Handle cache rebuild event.
+			_nextCacheUpdate -= Time.unscaledDeltaTime;
+			if (_nextCacheUpdate <= 0)
+			{
+				OnCacheRebuild?.Invoke();
+				_nextCacheUpdate = 2f;
+			}
+
 			fpscontroller player = mainscript.M.player;
 			RaycastHit hitInfo;
 			if (Physics.Raycast(mainscript.M.player.Cam.transform.position, mainscript.M.player.Cam.transform.forward, out hitInfo, mainscript.M.player.FrayRange, (int)mainscript.M.player.useLayer))
