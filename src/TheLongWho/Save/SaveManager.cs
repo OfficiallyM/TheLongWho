@@ -61,7 +61,7 @@ namespace TheLongWho.Save
 			{
 				if (entry.Name != prefab.name) continue;
 
-				GameObject obj = GameObject.Instantiate(prefab, entry.Position, entry.Rotation);
+				GameObject obj = GameObject.Instantiate(prefab, WorldUtilities.GetLocalObjectPosition(entry.Position), entry.Rotation);
 				SaveController saveable = obj.GetComponent<SaveController>();
 				saveable.ObjectID = entry.ObjectID;
 				saveable.LoadSaveEntry(entry);
@@ -120,8 +120,6 @@ namespace TheLongWho.Save
 
 			string existingString = ReadWriteToGameSave();
 			if (string.IsNullOrEmpty(existingString)) return;
-
-			Logging.Log($"Loaded data:\n{existingString}");
 
 			var settings = new JsonSerializerSettings
 			{

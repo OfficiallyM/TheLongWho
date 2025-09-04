@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TheLongWho.Utilities;
 using UnityEngine;
 
 namespace TheLongWho.Save
@@ -30,7 +31,7 @@ namespace TheLongWho.Save
 			{
 				Name = gameObject.name.Replace("(Clone)", "").Trim(),
 				ObjectID = ObjectID,
-				Position = transform.position,
+				Position = WorldUtilities.GetGlobalObjectPosition(transform.position),
 				Rotation = transform.rotation,
 				Data = new Dictionary<string, object>()
 			};
@@ -45,7 +46,7 @@ namespace TheLongWho.Save
 
 		public void LoadSaveEntry(SaveEntry entry)
 		{
-			transform.position = entry.Position;
+			transform.position = WorldUtilities.GetLocalObjectPosition(entry.Position);
 			transform.rotation = entry.Rotation;
 
 			foreach (ISaveable saveable in _saveables)
