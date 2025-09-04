@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TheLongWho.Utilities;
 using UnityEngine;
 
-namespace TheLongWho.Tardis.Audio
+namespace TheLongWho.Audio
 {
 	internal class AudioController : MonoBehaviour
 	{
