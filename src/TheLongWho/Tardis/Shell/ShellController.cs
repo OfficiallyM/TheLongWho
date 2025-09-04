@@ -1,11 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
+using TheLongWho.Audio;
 using TheLongWho.Save;
-using TheLongWho.Tardis.Audio;
 using TheLongWho.Tardis.Flight;
 using TheLongWho.Tardis.Interior;
-using TheLongWho.Tardis.Stabiliser;
 using TheLongWho.Tardis.System;
 using TheLongWho.Utilities;
 using UnityEngine;
@@ -67,7 +66,6 @@ namespace TheLongWho.Tardis.Shell
 
 			// Set up all systems.
 			gameObject.AddComponent<FlightSystem>();
-			gameObject.AddComponent<StabiliserSystem>();
 			
 			// System controller is added last so it automatically registers all of the systems.
 			gameObject.AddComponent<SystemController>().RegisterAllSystems();

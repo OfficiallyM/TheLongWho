@@ -1,5 +1,4 @@
 ﻿using TheLongWho.Tardis.Shell;
-using TheLongWho.Tardis.Stabiliser;
 using TheLongWho.Tardis.System;
 using TheLongWho.Utilities;
 using UnityEngine;
@@ -60,7 +59,6 @@ namespace TheLongWho.Tardis.Flight
 			player.GetIn(_shell.FakeSeat);
 			_shell.Interior.gameObject.SetActive(false);
 			StateManager.InFlight = true;
-			Systems.DisableSystem<StabiliserSystem>();
 			IsActive = true;
 		}
 
@@ -70,7 +68,6 @@ namespace TheLongWho.Tardis.Flight
 			_shell.Interior.SyncPositionToShell();
 			_rb.useGravity = true;
 			IsActive = false;
-			Systems.EnableSystem<StabiliserSystem>();
 			fpscontroller player = mainscript.M.player;
 			player.camView = false;
 			player.GetOut(_shell.Interior.transform.TransformPoint(_lastPosition), true);
