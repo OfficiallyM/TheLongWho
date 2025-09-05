@@ -52,6 +52,8 @@ namespace TheLongWho.Audio
 				return;
 			}
 
+			volume *= settingsscript.s.S.FSound;
+
 			source.clip = clip;
 			source.loop = loop;
 
