@@ -117,7 +117,9 @@ namespace TheLongWho
 			if (Input.GetKeyDown(KeyCode.Comma))
 			{
 				Vector3 position = mainscript.M.player.lookPoint + Vector3.up * 0.75f;
-				Quaternion rotation = Quaternion.FromToRotation(Vector3.forward, -mainscript.M.player.mainCam.transform.right);
+				Vector3 directionToPlayer = (mainscript.M.player.transform.position - position).normalized;
+				directionToPlayer.y = 0;
+				Quaternion rotation = Quaternion.LookRotation(directionToPlayer, Vector3.up);
 
 				GameObject.Instantiate(Shell, position, rotation);
 			}
@@ -125,7 +127,9 @@ namespace TheLongWho
 			if (Input.GetKeyDown(KeyCode.Period) && StateManager.LastTardis != null)
 			{
 				Vector3 position = mainscript.M.player.lookPoint;
-				Quaternion rotation = Quaternion.FromToRotation(Vector3.forward, -mainscript.M.player.mainCam.transform.right);
+				Vector3 directionToPlayer = (mainscript.M.player.transform.position - position).normalized;
+				directionToPlayer.y = 0;
+				Quaternion rotation = Quaternion.LookRotation(directionToPlayer, Vector3.up);
 				StateManager.LastTardis.Materialisation.Materialise(position, rotation);
 			}
 		}

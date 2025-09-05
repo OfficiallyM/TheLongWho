@@ -103,7 +103,8 @@ namespace TheLongWho.Tardis.Shell
 		private void OnDestroy()
 		{
 			// Destroy interior with shell.
-			Destroy(Interior.gameObject);
+			if (Interior != null)
+				Destroy(Interior.gameObject);
 		}
 
 		public object GetSaveData() => _shellSave;

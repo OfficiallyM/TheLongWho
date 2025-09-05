@@ -20,6 +20,11 @@ namespace TheLongWho.Save
 			SaveManager.Register(this);
 		}
 
+		private void OnDestroy()
+		{
+			SaveManager.Delete(ObjectID);
+		}
+
 		public void RefetchSaveables()
 		{
 			_saveables = new List<ISaveable>(GetComponentsInChildren<ISaveable>());
@@ -27,21 +32,26 @@ namespace TheLongWho.Save
 
 		public SaveEntry GetSaveEntry()
 		{
-			var entry = new SaveEntry
+			try
 			{
-				Name = gameObject.name.Replace("(Clone)", "").Trim(),
-				ObjectID = ObjectID,
-				Position = WorldUtilities.GetGlobalObjectPosition(transform.position),
-				Rotation = transform.rotation,
-				Data = new Dictionary<string, object>()
-			};
+				var entry = new SaveEntry
+				{
+					Name = gameObject.name.Replace("(Clone)", "").Trim(),
+					ObjectID = ObjectID,
+					Position = WorldUtilities.GetGlobalObjectPosition(transform.position),
+					Rotation = transform.rotation,
+					Data = new Dictionary<string, object>()
+				};
 
-			foreach (ISaveable saveable in _saveables)
-			{
-				entry.Data[saveable.SaveKey] = saveable.GetSaveData();
+				foreach (ISaveable saveable in _saveables)
+				{
+					entry.Data[saveable.SaveKey] = saveable.GetSaveData();
+				}
+
+				return entry;
 			}
-
-			return entry;
+			catch { }
+			return new SaveEntry() { ObjectID = ObjectID };
 		}
 
 		public void LoadSaveEntry(SaveEntry entry)

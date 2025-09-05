@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using TheLongWho.Utilities;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace TheLongWho.Save
 {
@@ -45,7 +46,8 @@ namespace TheLongWho.Save
 		{
 			SaveEntry entry = save.GetSaveEntry();
 			_saveFile.Entries.RemoveAll(e => e.ObjectID == entry.ObjectID);
-			_saveFile.Entries.Add(entry);
+			if (entry.Name != null)
+				_saveFile.Entries.Add(entry);
 
 			if (commit) SerializeSaveData();
 		}
@@ -63,6 +65,12 @@ namespace TheLongWho.Save
 				saveable.ObjectID = entry.ObjectID;
 				saveable.LoadSaveEntry(entry);
 			}
+		}
+
+		public static void Delete(string objectID)
+		{
+			_saveFile.Entries.RemoveAll(e => e.ObjectID == objectID);
+			SerializeSaveData();
 		}
 
 		/// <summary>
