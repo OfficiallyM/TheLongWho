@@ -27,6 +27,7 @@ namespace TheLongWho
 
 		private static bool _areAssetsLoaded = false;
 		internal GameObject Shell;
+		internal GameObject OverlayShell;
 		internal GameObject Interior;
 		internal AudioClip MaterialiseClip;
 		internal AudioClip DematerialiseClip;
@@ -47,9 +48,12 @@ namespace TheLongWho
 			if (_areAssetsLoaded) return;
 			List<GameObject> toLoad = new List<GameObject>();
 			AssetBundle bundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream($"{nameof(TheLongWho)}.thelongwho"));
+			foreach (string asset in bundle.GetAllAssetNames())
+				Logging.Log(asset);
 			Shell = bundle.LoadAsset<GameObject>("tardis.prefab");
 			Shell.AddComponent<ShellController>();
 			toLoad.Add(Shell);
+			OverlayShell = bundle.LoadAsset<GameObject>("tardis overlay.prefab");
 
 			Interior = bundle.LoadAsset<GameObject>("type30.prefab");
 			Interior.AddComponent<InteriorController>();
@@ -116,6 +120,13 @@ namespace TheLongWho
 				Quaternion rotation = Quaternion.FromToRotation(Vector3.forward, -mainscript.M.player.mainCam.transform.right);
 
 				GameObject.Instantiate(Shell, position, rotation);
+			}
+
+			if (Input.GetKeyDown(KeyCode.Period) && StateManager.LastTardis != null)
+			{
+				Vector3 position = mainscript.M.player.lookPoint;
+				Quaternion rotation = Quaternion.FromToRotation(Vector3.forward, -mainscript.M.player.mainCam.transform.right);
+				StateManager.LastTardis.Materialisation.Materialise(position, rotation);
 			}
 		}
 

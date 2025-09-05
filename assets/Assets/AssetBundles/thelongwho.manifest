@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1045247111
+CRC: 2189037869
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 79f71fb813326a02086bc74b4b47c069
+    Hash: 9df798c38861d60e4002ce3f25e1bc2d
   TypeTreeHash:
     serializedVersion: 2
     Hash: 80aaea858b5a48a01cebb76f7818ac24
@@ -43,7 +43,9 @@ Assets:
 - Assets/Tardis/Interiors/type30.fbx
 - Assets/Tardis/Sound/mat.wav
 - Assets/Tardis/Sound/demat.wav
+- Assets/Tardis/Shells/TARDIS Overlay.fbx
 - Assets/Tardis/Shells/TARDIS.fbx
 - Assets/Tardis/Shells/TARDIS.prefab
 - Assets/Tardis/Sound/flight.wav
+- Assets/Tardis/Shells/TARDIS Overlay.prefab
 Dependencies: []

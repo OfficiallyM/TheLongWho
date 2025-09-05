@@ -1,0 +1,256 @@
+fileFormatVersion: 2
+guid: 511470583a0ca2e4486245510995f58a
+ModelImporter:
+  serializedVersion: 21300
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Base
+    second: {fileID: 2100000, guid: b113f0510fae0fe41b2c8afdd3d3752d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Ceiling
+    second: {fileID: 2100000, guid: 7e86fd226b779ec468256b33a888ad51, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Door Left
+    second: {fileID: 2100000, guid: 9be67b77168afb6418a5e36d58ea6ebd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Door Right
+    second: {fileID: 2100000, guid: 5e913a630bca46a4db86f6b27761ee0c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Door Top Trim
+    second: {fileID: 2100000, guid: 245f3da6208fb8f4186df52bd0c89f31, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Lamp Base
+    second: {fileID: 2100000, guid: 960e361566b14914e985dea6c0446bba, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Lamp Bottom
+    second: {fileID: 2100000, guid: a2108dca5cdcea842b2c21d0a497441d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Lamp Struts
+    second: {fileID: 2100000, guid: d3e8d8a87a4b4d640966a38feb38f049, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Lamp Top
+    second: {fileID: 2100000, guid: 84f146eaeea3603448644e08c0358d61, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Pillar Tops
+    second: {fileID: 2100000, guid: 4b56e09b1b888e64da15e32b30e6f42c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Pillars
+    second: {fileID: 2100000, guid: b0fec3abfa1fd8941aa7710f2c900dc3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Pull To Open Sign
+    second: {fileID: 2100000, guid: 704a286a3cfa07940a96ce0bde987bfb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Roof
+    second: {fileID: 2100000, guid: 282f628870d645447853d832980cdbf4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Sign
+    second: {fileID: 2100000, guid: c6e7bfabca630a542a8d37d36bbb5e6d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Wall Trim
+    second: {fileID: 2100000, guid: 468cd8090ab5134439d7fe74450dc926, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue Painted Wood Walls
+    second: {fileID: 2100000, guid: 39d0c3130d271954583a7c4b2aa56a6c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Glass Sign
+    second: {fileID: 2100000, guid: 56a2e196f1c5bca4a9455b0c9327a637, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lamp Glass
+    second: {fileID: 2100000, guid: 5b8dadac9c2935448a0580d48798c2a6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lock Brass Dark
+    second: {fileID: 2100000, guid: 69c7c333c158f6a48ba00a0d2123ca1c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lock Brass Light
+    second: {fileID: 2100000, guid: 4b34a7cf7cfe2fa4fbee398d62f25fc4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.004
+    second: {fileID: 2100000, guid: 3dcc6c61a4d54724ebcae63f050fb1ec, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Obscured Glass
+    second: {fileID: 2100000, guid: 2ab9be1c406c7034cb26c35f71e2c8b7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Procedural Frosted Glass
+    second: {fileID: 2100000, guid: c8c5ce43481af9f44bbc57646c898bca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Pull to Open sign
+    second: {fileID: 2100000, guid: 6ad45fa711a9b8b49b6f161f50fed88e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: White Painted Wood Ceiling
+    second: {fileID: 2100000, guid: 7289523d31c6a9d4ab82f16c0096f9d4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: White Painted Wood Door Left
+    second: {fileID: 2100000, guid: 600e10fa75a9ff04385d5b97a036d4d4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: White Painted Wood Door Right
+    second: {fileID: 2100000, guid: 688d6d8f848fe8e49a0cc4a9289ba6c4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: White Painted Wood Sign
+    second: {fileID: 2100000, guid: c00f83cbcbc581d45a10d8b07f239390, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: White Painted Wood Walls
+    second: {fileID: 2100000, guid: d98467b1887dd2a4e8f4f723f3dccc79, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: White Painted Wood Widows
+    second: {fileID: 2100000, guid: 97723455fcc99c7458bcf9353f8cc87d, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 1
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: thelongwho
+  assetBundleVariant: 
