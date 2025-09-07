@@ -32,6 +32,7 @@ namespace TheLongWho
 		internal AudioClip MaterialiseClip;
 		internal AudioClip DematerialiseClip;
 		internal AudioClip FlightClip;
+		internal GameObject UIButton;
 
 		public event Action OnCacheRebuild;
 		private float _nextCacheUpdate = 2f;
@@ -58,6 +59,8 @@ namespace TheLongWho
 			Interior = bundle.LoadAsset<GameObject>("type30.prefab");
 			Interior.AddComponent<InteriorController>();
 			ShellController.InteriorPrefab = Interior;
+
+			UIButton = bundle.LoadAsset<GameObject>("uibutton.prefab");
 
 			MaterialiseClip = bundle.LoadAsset<AudioClip>("mat.wav");
 			DematerialiseClip = bundle.LoadAsset<AudioClip>("demat.wav");

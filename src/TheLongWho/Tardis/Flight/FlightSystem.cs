@@ -1,4 +1,5 @@
-﻿using TheLongWho.Tardis.Shell;
+﻿using TheLongWho.Tardis.Materialisation;
+using TheLongWho.Tardis.Shell;
 using TheLongWho.Tardis.System;
 using TheLongWho.Utilities;
 using UnityEngine;
@@ -36,7 +37,7 @@ namespace TheLongWho.Tardis.Flight
 		private void OnLook(RaycastHit hitInfo)
 		{
 			fpscontroller player = mainscript.M.player;
-			if (hitInfo.collider.name == "Console")
+			if (hitInfo.collider.name == "Console" && CanActivate())
 			{
 				player.E = "Engage flight";
 				player.BcanE = true;
@@ -48,6 +49,12 @@ namespace TheLongWho.Tardis.Flight
 					return;
 				}
 			}
+		}
+
+		private bool CanActivate()
+		{
+			if (_shell.Materialisation.CurrentState == MaterialisationSystem.State.Dematerialised) return false;
+			return true;
 		}
 
 		public override void Activate()

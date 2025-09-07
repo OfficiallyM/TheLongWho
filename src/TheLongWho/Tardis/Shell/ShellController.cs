@@ -6,6 +6,7 @@ using TheLongWho.Save;
 using TheLongWho.Tardis.Flight;
 using TheLongWho.Tardis.Interior;
 using TheLongWho.Tardis.Materialisation;
+using TheLongWho.Tardis.Screen;
 using TheLongWho.Tardis.System;
 using TheLongWho.Utilities;
 using UnityEngine;
@@ -87,6 +88,7 @@ namespace TheLongWho.Tardis.Shell
 			// Set up all systems.
 			gameObject.AddComponent<FlightSystem>();
 			Materialisation = gameObject.AddComponent<MaterialisationSystem>();
+			gameObject.AddComponent<ScreenSystem>();
 
 			// System controller is added last so it automatically registers all of the systems.
 			gameObject.AddComponent<SystemController>().RegisterAllSystems();
@@ -142,6 +144,7 @@ namespace TheLongWho.Tardis.Shell
 		public bool CanEnter()
 		{
 			if (!Interior.gameObject.activeSelf) return false;
+			if (Materialisation.CurrentState == MaterialisationSystem.State.Dematerialised) return false;
 			return true;
 		}
 

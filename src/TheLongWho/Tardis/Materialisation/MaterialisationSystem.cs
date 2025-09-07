@@ -10,6 +10,7 @@ namespace TheLongWho.Tardis.Materialisation
 		public override string Name => "Materialisation";
 
 		private ShellController _shell;
+		private Transform _rotor;
 		private Rigidbody _rb;
 		private Coroutine _currentRoutine;
 
@@ -32,6 +33,7 @@ namespace TheLongWho.Tardis.Materialisation
 		{
 			_shell = GetComponent<ShellController>();
 			_rb = GetComponent<Rigidbody>();
+			_rotor = _shell.Interior.Rotor;
 		}
 
 		public void Dematerialise(Speed speed = Speed.Standard)
@@ -55,6 +57,7 @@ namespace TheLongWho.Tardis.Materialisation
 
 		private IEnumerator DematerialiseRoutine(Speed speed)
 		{
+			CurrentState = State.Dematerialised;
 			float duration = speed == Speed.Standard ? 18f : 9f;
 			float fadeDuration = speed == Speed.Standard ? 14f : 9f;
 			string clip = speed == Speed.Standard ? "dematerialise" : string.Empty;
@@ -67,6 +70,8 @@ namespace TheLongWho.Tardis.Materialisation
 
 			// Hide the real shell.
 			_shell.SetShellRendered(false);
+
+			StartCoroutine(AnimateRotor(duration, false));
 
 			float timer = 0f;
 			while (timer < fadeDuration)
@@ -97,7 +102,6 @@ namespace TheLongWho.Tardis.Materialisation
 			_shell.SetOverlayActive(false);
 
 			_currentRoutine = null;
-			CurrentState = State.Dematerialised;
 		}
 
 		private IEnumerator MaterialiseRoutine(Vector3 position, Quaternion rotation, Speed speed)
@@ -119,6 +123,8 @@ namespace TheLongWho.Tardis.Materialisation
 			// Set up overlay shell.
 			_shell.SetOverlayActive(true);
 			_shell.StartOverlayLampFlash(2f);
+
+			StartCoroutine(AnimateRotor(duration, true));
 
 			float timer = 0f;
 			while (timer < fadeDuration)
@@ -154,6 +160,37 @@ namespace TheLongWho.Tardis.Materialisation
 		{
 			yield return StartCoroutine(DematerialiseRoutine(speed));
 			yield return StartCoroutine(MaterialiseRoutine(position, rotation, speed));
+		}
+
+		private IEnumerator AnimateRotor(float duration, bool isMaterialising)
+		{
+			float timer = 0f;
+			Vector3 basePos = _rotor.localPosition;
+
+			float amplitude = 0.6f;
+			float cycles = 4f;
+
+			while (timer < duration)
+			{
+				float t = timer / duration;
+
+				// Compute slow sine-wave movement.
+				float sine = Mathf.Sin(t * Mathf.PI * cycles);
+
+				// Gradually ramp the motion in or out.
+				float ramp = isMaterialising ? t : (1f - t);
+
+				// Apply ramp to the entire sine output, not the sine itself.
+				float offset = sine * amplitude * ramp;
+
+				_rotor.transform.localPosition = basePos + Vector3.up * offset;
+
+				timer += Time.deltaTime;
+				yield return null;
+			}
+
+			// Snap back to base smoothly.
+			_rotor.localPosition = basePos;
 		}
 	}
 }

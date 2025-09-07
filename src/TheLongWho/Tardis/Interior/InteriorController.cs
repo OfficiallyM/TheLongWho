@@ -9,11 +9,15 @@ namespace TheLongWho.Tardis.Interior
 		internal ShellController Shell;
 		internal Transform EnterPoint { get; private set; }
 		internal Transform Console { get; private set; }
+		internal Transform Rotor { get; private set; }
+		internal Canvas ScreenCanvas { get; private set; }
 
 		private void Awake()
 		{
 			EnterPoint = transform.Find("EnterPoint");
 			Console = transform.Find("Console");
+			Rotor = transform.Find("Rotor");
+			ScreenCanvas = transform.Find("ScreenCanvas")?.GetComponent<Canvas>();
 		}
 
 		public void SyncPositionToShell()
