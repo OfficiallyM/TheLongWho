@@ -96,7 +96,10 @@ namespace TheLongWho.Tardis.Shell
 
 			// Player saved inside, spawn them outside.
 			if (_shellSave.IsInside)
+			{
 				WorldUtilities.TeleportPlayerSafe(GetSafeExitPoint());
+				_shellSave.IsInside = false;
+			}
 
 			// Trigger a manual save.
 			SaveManager.Save(SaveController, true);
@@ -126,19 +129,19 @@ namespace TheLongWho.Tardis.Shell
 		public void Enter()
 		{
 			if (!CanEnter()) return;
-			_shellSave.IsInside = true;
-			StateManager.LastTardis = this;
-			SaveManager.Save(SaveController, true);
 			Interior.SyncPositionToShell();
-			WorldUtilities.TeleportPlayer(Interior.EnterPoint.position + Vector3.up * 2f);
+			WorldUtilities.TeleportPlayer(Interior.EnterPoint.position + Vector3.up * 2f, -Interior.transform.forward);
+			StateManager.LastTardis = this;
+			_shellSave.IsInside = true;
+			SaveManager.Save(SaveController, true);
 		}
 
 		public void Exit()
 		{
 			if (!CanExit()) return;
+			WorldUtilities.TeleportPlayer(GetSafeExitPoint(), transform.forward);
 			_shellSave.IsInside = false;
 			SaveManager.Save(SaveController, true);
-			WorldUtilities.TeleportPlayer(GetSafeExitPoint());
 		}
 
 		public bool CanEnter()

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TheLongWho.Tardis.Shell;
 using TheLongWho.Tardis.System;
 using TheLongWho.Utilities;
@@ -21,12 +20,17 @@ namespace TheLongWho.Tardis.Screen
 		private Dictionary<string, GameObject> _menus = new Dictionary<string, GameObject>();
 		private GameObject _currentMenu;
 		private Button _backButton;
+		private RawImage _screensaver;
 
 		private void Start()
 		{
 			_shell = GetComponent<ShellController>();
 			_canvas = _shell.Interior.ScreenCanvas;
 			_canvas.worldCamera = mainscript.M.player.Cam;
+
+			GameObject screensaver = Instantiate(TheLongWho.I.UIImage, _canvas.transform);
+			_screensaver = screensaver.GetComponent<RawImage>();
+			_screensaver.texture = TheLongWho.I.ScreenImage;
 
 			// Set up UI.
 			_backButton = CreateButton("<", new Rect(0, 149, 25, 25));
@@ -47,6 +51,23 @@ namespace TheLongWho.Tardis.Screen
 
 		private void Update()
 		{
+			if (!_shell.IsInside()) return;
+
+			fpscontroller player = mainscript.M.player;
+			float distance = Vector3.Distance(player.transform.position, _canvas.transform.position);
+
+			if (distance > 5f)
+			{
+				_currentMenu.SetActive(false);
+				_screensaver.gameObject.SetActive(true);
+				return;
+			}
+
+			if (!_currentMenu.activeSelf)
+				ShowMenu(_currentMenu.name);
+			if (_screensaver.gameObject.activeSelf)
+				_screensaver.gameObject.SetActive(false);
+
 			_eventData = new PointerEventData(EventSystem.current)
 			{
 				position = new Vector2(UnityEngine.Screen.width / 2, UnityEngine.Screen.height / 2)
@@ -58,8 +79,13 @@ namespace TheLongWho.Tardis.Screen
 			if (_results.Count > 0)
 			{
 				var button = _results[0].gameObject.GetComponent<Button>();
-				if (button != null && Input.GetKeyDown(KeyCode.E))
-					button.onClick.Invoke();
+				if (button != null)
+				{
+					player.E = "Select";
+					player.BcanE = true;
+					if (Input.GetKeyDown(KeyCode.E))
+						button.onClick.Invoke();
+				}
 			}
 		}
 
@@ -68,7 +94,7 @@ namespace TheLongWho.Tardis.Screen
 			Button button = Instantiate(TheLongWho.I.UIButton, menu != null ? _menus[menu].transform : _canvas.transform).GetComponent<Button>();
 			SetButtonRect(button.GetComponent<RectTransform>(), position);
 			button.onClick.AddListener(() => OnButtonClick(button));
-			button.name = triggerMenu == null ? name : "trigger_" + triggerMenu;
+			button.name = triggerMenu == null ? name.Replace(" ", "_").ToLowerInvariant() : "trigger_" + triggerMenu;
 			button.GetComponentInChildren<TextMeshProUGUI>().text = name;
 			return button;
 		}
@@ -122,6 +148,23 @@ namespace TheLongWho.Tardis.Screen
 			switch (_currentMenu.name)
 			{
 				case "destinations":
+					switch (button.name)
+					{
+						case "starter_house":
+							foreach (buildingscript building in savedatascript.d.buildings)
+							{
+								if (building.name.ToLower().Contains("haz02"))
+								{
+									Transform transform = building.transform.Find("interiorKitchen");
+									if (transform != null)
+									{
+										Vector3 pos = transform.position + Vector3.left * 10f + Vector3.up * 5f;
+										_shell.Materialisation.Materialise(WorldUtilities.GetGlobalObjectPosition(pos), transform.rotation);
+									}
+								}
+							}
+							break;
+					}
 					break;
 				case "rotation":
 					string rotationString = button.name.Replace(" degrees", "");

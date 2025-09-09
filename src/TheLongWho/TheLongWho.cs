@@ -7,7 +7,6 @@ using TheLongWho.Tardis.Shell;
 using TheLongWho.Utilities;
 using TLDLoader;
 using UnityEngine;
-using static settingsscript;
 
 namespace TheLongWho
 {
@@ -29,10 +28,13 @@ namespace TheLongWho
 		internal GameObject Shell;
 		internal GameObject OverlayShell;
 		internal GameObject Interior;
+		internal Texture ScreenImage;
 		internal AudioClip MaterialiseClip;
 		internal AudioClip DematerialiseClip;
 		internal AudioClip FlightClip;
 		internal GameObject UIButton;
+		internal GameObject UIText;
+		internal GameObject UIImage;
 
 		public event Action OnCacheRebuild;
 		private float _nextCacheUpdate = 2f;
@@ -59,8 +61,11 @@ namespace TheLongWho
 			Interior = bundle.LoadAsset<GameObject>("type30.prefab");
 			Interior.AddComponent<InteriorController>();
 			ShellController.InteriorPrefab = Interior;
+			ScreenImage = bundle.LoadAsset<Texture>("screenimage.jpg");
 
 			UIButton = bundle.LoadAsset<GameObject>("uibutton.prefab");
+			UIText = bundle.LoadAsset<GameObject>("uitext.prefab");
+			UIImage = bundle.LoadAsset<GameObject>("uiimage.prefab");
 
 			MaterialiseClip = bundle.LoadAsset<AudioClip>("mat.wav");
 			DematerialiseClip = bundle.LoadAsset<AudioClip>("demat.wav");
@@ -100,7 +105,10 @@ namespace TheLongWho
 					player.BcanE = true;
 
 					if (Input.GetKeyDown(KeyCode.E))
+					{
 						interior.Shell.Exit();
+						return;
+					}
 				}
 				else if (shell != null && shell.CanEnter())
 				{
@@ -108,7 +116,11 @@ namespace TheLongWho
 					player.BcanE = true;
 
 					if (Input.GetKeyDown(KeyCode.E))
+					{
 						shell.Enter();
+						return;
+					}
+
 				}
 				else
 				{

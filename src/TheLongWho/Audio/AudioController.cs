@@ -56,6 +56,7 @@ namespace TheLongWho.Audio
 
 			source.clip = clip;
 			source.loop = loop;
+			source.priority = 0;
 
 			if (Mathf.Abs(fadeTime) > 0)
 			{

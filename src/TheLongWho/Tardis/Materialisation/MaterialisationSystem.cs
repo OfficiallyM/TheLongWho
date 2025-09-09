@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using TheLongWho.Tardis.Shell;
 using TheLongWho.Tardis.System;
+using TheLongWho.Utilities;
 using UnityEngine;
 
 namespace TheLongWho.Tardis.Materialisation
@@ -110,9 +111,11 @@ namespace TheLongWho.Tardis.Materialisation
 			float fadeDuration = speed == Speed.Standard ? 16f : 9f;
 			string clip = speed == Speed.Standard ? "materialise" : string.Empty;
 
-			_shell.transform.position = position;
+			_shell.transform.position = WorldUtilities.GetLocalObjectPosition(position);
 			_shell.transform.rotation = rotation;
 			_shell.Interior.SyncPositionToShell();
+			// Wait for the position sync to happen, otherwise the audio doesn't play correctly.
+			yield return new WaitForSeconds(2f);
 
 			// Re-enable colliders and gravity to ensure it appears on the floor.
 			_shell.SetCollidersEnabled(true);

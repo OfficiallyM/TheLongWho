@@ -20,6 +20,15 @@ namespace TheLongWho.Tardis.Interior
 			ScreenCanvas = transform.Find("ScreenCanvas")?.GetComponent<Canvas>();
 		}
 
+		private void Start()
+		{
+			// This is required to keep the interior in sync with the world when the shell moves.
+			visszarako visszarako = gameObject.AddComponent<visszarako>();
+			visszarako.importantUnderMapLook = true;
+			visszarako.RB = GetComponent<Rigidbody>();
+			visszarako.rb = true;
+		}
+
 		public void SyncPositionToShell()
 		{
 			// Offset directly below shell.

@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3258134633
+CRC: 312229690
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 7a018c491964261c5a00c0bbf5d125f6
+    Hash: 224eff5557bc501c7751275645b372f1
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 4536acf2a5e2c24d5cb313896de5ae15
+    Hash: a6e9c272fcfa09a638ff3ad9df98faee
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -37,6 +37,8 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
 - Class: 114
@@ -105,14 +107,17 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.SpriteState
 Assets:
+- Assets/UI Prefabs/UIImage.prefab
 - Assets/Tardis/Interiors/type30.prefab
-- Assets/UIButton.prefab
+- Assets/UI Prefabs/UIButton.prefab
 - Assets/Tardis/Interiors/type30.fbx
+- Assets/UI Prefabs/UIText.prefab
 - Assets/Tardis/Sound/mat.wav
 - Assets/Tardis/Sound/demat.wav
 - Assets/Tardis/Shells/TARDIS Overlay.fbx
 - Assets/Tardis/Shells/TARDIS.fbx
 - Assets/Tardis/Shells/TARDIS.prefab
 - Assets/Tardis/Sound/flight.wav
+- Assets/Tardis/Interiors/screenimage.jpg
 - Assets/Tardis/Shells/TARDIS Overlay.prefab
 Dependencies: []
