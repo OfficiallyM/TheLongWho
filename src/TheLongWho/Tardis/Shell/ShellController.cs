@@ -130,7 +130,7 @@ namespace TheLongWho.Tardis.Shell
 		{
 			if (!CanEnter()) return;
 			Interior.SyncPositionToShell();
-			WorldUtilities.TeleportPlayer(Interior.EnterPoint.position + Vector3.up * 2f, -Interior.transform.forward);
+			WorldUtilities.TeleportPlayer(Interior.EnterPoint.position + Vector3.up * 2f);
 			StateManager.LastTardis = this;
 			_shellSave.IsInside = true;
 			SaveManager.Save(SaveController, true);
@@ -139,7 +139,7 @@ namespace TheLongWho.Tardis.Shell
 		public void Exit()
 		{
 			if (!CanExit()) return;
-			WorldUtilities.TeleportPlayer(GetSafeExitPoint(), transform.forward);
+			WorldUtilities.TeleportPlayer(GetSafeExitPoint());
 			_shellSave.IsInside = false;
 			SaveManager.Save(SaveController, true);
 		}

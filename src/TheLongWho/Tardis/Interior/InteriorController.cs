@@ -43,7 +43,7 @@ namespace TheLongWho.Tardis.Interior
 			Quaternion localRot = Quaternion.Inverse(transform.rotation) * player.transform.rotation;
 
 			transform.position = Shell.transform.position + yawOnly * offset;
-			transform.rotation = yawOnly;
+			transform.rotation = yawOnly * Quaternion.Euler(0f, 180f, 0f);
 
 			// Restore player inside relative to interior.
 			if (Shell.IsInside() && !StateManager.InFlight)

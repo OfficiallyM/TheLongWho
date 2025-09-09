@@ -158,7 +158,7 @@ namespace TheLongWho.Tardis.Screen
 									Transform transform = building.transform.Find("interiorKitchen");
 									if (transform != null)
 									{
-										Vector3 pos = transform.position + Vector3.left * 10f + Vector3.up * 5f;
+										Vector3 pos = transform.position + Vector3.back * 10f + Vector3.up * 5f;
 										_shell.Materialisation.Materialise(WorldUtilities.GetGlobalObjectPosition(pos), transform.rotation);
 									}
 								}
