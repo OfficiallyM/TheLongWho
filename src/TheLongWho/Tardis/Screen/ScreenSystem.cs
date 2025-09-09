@@ -21,6 +21,7 @@ namespace TheLongWho.Tardis.Screen
 		private GameObject _currentMenu;
 		private Button _backButton;
 		private RawImage _screensaver;
+		private List<Button> _buttons = new List<Button>();
 
 		private void Start()
 		{
@@ -37,8 +38,9 @@ namespace TheLongWho.Tardis.Screen
 
 			CreateMenu("main");
 			ShowMenu("main");
-			CreateButton("Destinations", new Rect(65, 60, 200, 25), "main", "destinations");
-			CreateButton("Rotation", new Rect(65, 80, 200, 25), "main", "rotation");
+			CreateButton("Destinations", new Rect(65, 50, 200, 25), "main", "destinations");
+			CreateButton("Rotation", new Rect(65, 70, 200, 25), "main", "rotation");
+			CreateButton("Fast return", new Rect(65, 90, 200, 25), "main");
 
 			CreateMenu("destinations");
 			CreateButton("Starter house", new Rect(65, 10, 200, 25), "destinations");
@@ -68,6 +70,15 @@ namespace TheLongWho.Tardis.Screen
 			if (_screensaver.gameObject.activeSelf)
 				_screensaver.gameObject.SetActive(false);
 
+			// Set button colours.
+			foreach (Button btn in _buttons)
+			{
+				btn.image.color = btn.colors.normalColor;
+
+				if (btn.name == "fast_return" && _shell.Materialisation.LastLocation == null)
+					btn.image.color = btn.colors.disabledColor;
+			}
+
 			_eventData = new PointerEventData(EventSystem.current)
 			{
 				position = new Vector2(UnityEngine.Screen.width / 2, UnityEngine.Screen.height / 2)
@@ -79,7 +90,7 @@ namespace TheLongWho.Tardis.Screen
 			if (_results.Count > 0)
 			{
 				var button = _results[0].gameObject.GetComponent<Button>();
-				if (button != null)
+				if (button != null && button.image.color != button.colors.disabledColor)
 				{
 					player.E = button == _backButton ? "Back" : button.name.Contains("trigger_") ? "Open menu" : "Select";
 					player.BcanE = true;
@@ -96,6 +107,7 @@ namespace TheLongWho.Tardis.Screen
 			button.onClick.AddListener(() => OnButtonClick(button));
 			button.name = triggerMenu == null ? name.Replace(" ", "_").ToLowerInvariant() : "trigger_" + triggerMenu;
 			button.GetComponentInChildren<TextMeshProUGUI>().text = name;
+			_buttons.Add(button);
 			return button;
 		}
 
@@ -147,6 +159,15 @@ namespace TheLongWho.Tardis.Screen
 
 			switch (_currentMenu.name)
 			{
+				case "main":
+					switch (button.name)
+					{
+						case "fast_return":
+							_shell.Materialisation.Materialise(_shell.Materialisation.LastLocation.Position, _shell.Materialisation.LastLocation.Rotation);
+							break;
+					}
+					break;
+
 				case "destinations":
 					switch (button.name)
 					{
@@ -166,6 +187,7 @@ namespace TheLongWho.Tardis.Screen
 							break;
 					}
 					break;
+
 				case "rotation":
 					string rotationString = button.name.Replace(" degrees", "");
 					if (float.TryParse(rotationString, out float rotation))
@@ -177,6 +199,9 @@ namespace TheLongWho.Tardis.Screen
 					}
 					break;
 			}
+
+			// Return back to main menu on selection.
+			ShowMenu("main");
 		}
 	}
 }

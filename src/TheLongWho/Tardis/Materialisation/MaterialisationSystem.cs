@@ -16,6 +16,7 @@ namespace TheLongWho.Tardis.Materialisation
 		private Coroutine _currentRoutine;
 
 		public State CurrentState = State.Idle;
+		public Location LastLocation { get; private set; }
 
 		public enum Speed
 		{
@@ -37,27 +38,30 @@ namespace TheLongWho.Tardis.Materialisation
 			_rotor = _shell.Interior.Rotor;
 		}
 
-		public void Dematerialise(Speed speed = Speed.Standard)
+		public void Dematerialise(Speed speed = Speed.Standard, bool shouldSaveLocation = true)
 		{
 			if (CurrentState == State.Dematerialised) return;
 			if (_currentRoutine != null) StopCoroutine(_currentRoutine);
-			_currentRoutine = StartCoroutine(DematerialiseRoutine(speed));
+			_currentRoutine = StartCoroutine(DematerialiseRoutine(speed, shouldSaveLocation));
 		}
 
-		public void Materialise(Vector3 position, Quaternion rotation, Speed speed = Speed.Standard)
+		public void Materialise(Vector3 position, Quaternion rotation, Speed speed = Speed.Standard, bool shouldSaveLocation = true)
 		{
 			if (_currentRoutine != null) StopCoroutine(_currentRoutine);
 
 			// Ensure TARDIS is dematerialised.
 			if (CurrentState == State.Idle)
-				_currentRoutine = StartCoroutine(FullRoutine(position, rotation, speed));
+				_currentRoutine = StartCoroutine(FullRoutine(position, rotation, speed, shouldSaveLocation));
 			// Already dematerialised, just materialise.
 			else
 				_currentRoutine = StartCoroutine(MaterialiseRoutine(position, rotation, speed));
 		}
 
-		private IEnumerator DematerialiseRoutine(Speed speed)
+		private IEnumerator DematerialiseRoutine(Speed speed, bool shouldSaveLocation)
 		{
+			if (shouldSaveLocation)
+				LastLocation = Location.FromTransform(_shell.transform);
+
 			CurrentState = State.Dematerialised;
 			float duration = speed == Speed.Standard ? 18f : 9f;
 			float fadeDuration = speed == Speed.Standard ? 14f : 9f;
@@ -159,9 +163,9 @@ namespace TheLongWho.Tardis.Materialisation
 			CurrentState = State.Idle;
 		}
 
-		private IEnumerator FullRoutine(Vector3 position, Quaternion rotation, Speed speed)
+		private IEnumerator FullRoutine(Vector3 position, Quaternion rotation, Speed speed, bool shouldSaveLocation)
 		{
-			yield return StartCoroutine(DematerialiseRoutine(speed));
+			yield return StartCoroutine(DematerialiseRoutine(speed, shouldSaveLocation));
 			yield return StartCoroutine(MaterialiseRoutine(position, rotation, speed));
 		}
 
