@@ -145,7 +145,7 @@ namespace TheLongWho
 				Vector3 directionToPlayer = (mainscript.M.player.transform.position - position).normalized;
 				directionToPlayer.y = 0;
 				Quaternion rotation = Quaternion.LookRotation(directionToPlayer, Vector3.up);
-				StateManager.LastTardis.Materialisation.Materialise(position, rotation);
+				StateManager.LastTardis.Materialisation.Materialise(WorldUtilities.GetGlobalObjectPosition(position), rotation);
 			}
 		}
 

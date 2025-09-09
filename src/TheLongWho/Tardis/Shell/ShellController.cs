@@ -6,6 +6,7 @@ using TheLongWho.Save;
 using TheLongWho.Tardis.Flight;
 using TheLongWho.Tardis.Interior;
 using TheLongWho.Tardis.Materialisation;
+using TheLongWho.Tardis.PerceptionFilter;
 using TheLongWho.Tardis.Screen;
 using TheLongWho.Tardis.System;
 using TheLongWho.Utilities;
@@ -89,6 +90,7 @@ namespace TheLongWho.Tardis.Shell
 			gameObject.AddComponent<FlightSystem>();
 			Materialisation = gameObject.AddComponent<MaterialisationSystem>();
 			gameObject.AddComponent<ScreenSystem>();
+			gameObject.AddComponent<PerceptionFilterSystem>();
 
 			// System controller is added last so it automatically registers all of the systems.
 			gameObject.AddComponent<SystemController>().RegisterAllSystems();
