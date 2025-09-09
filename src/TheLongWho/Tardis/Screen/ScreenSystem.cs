@@ -38,7 +38,7 @@ namespace TheLongWho.Tardis.Screen
 			CreateMenu("main");
 			ShowMenu("main");
 			CreateButton("Destinations", new Rect(65, 60, 200, 25), "main", "destinations");
-			CreateButton("Rotation", new Rect(65f, 80, 200, 25), "main", "rotation");
+			CreateButton("Rotation", new Rect(65, 80, 200, 25), "main", "rotation");
 
 			CreateMenu("destinations");
 			CreateButton("Starter house", new Rect(65, 10, 200, 25), "destinations");
@@ -81,7 +81,7 @@ namespace TheLongWho.Tardis.Screen
 				var button = _results[0].gameObject.GetComponent<Button>();
 				if (button != null)
 				{
-					player.E = "Select";
+					player.E = button == _backButton ? "Back" : button.name.Contains("trigger_") ? "Open menu" : "Select";
 					player.BcanE = true;
 					if (Input.GetKeyDown(KeyCode.E))
 						button.onClick.Invoke();
