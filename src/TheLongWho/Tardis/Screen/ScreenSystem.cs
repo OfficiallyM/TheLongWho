@@ -50,12 +50,12 @@ namespace TheLongWho.Tardis.Screen
 			// Can't populate systems menu here, they haven't registered yet.
 
 			CreateMenu("destinations");
-			CreateButton("Starter house", new Rect(65, 10, 200, 25), "destinations");
+			CreateButton("Starter house", new Rect(61, 10, 200, 25), "destinations");
 
 			CreateMenu("rotation");
-			CreateButton("180 degrees", new Rect(65, 10, 200, 25), "rotation");
-			CreateButton("-90 degrees", new Rect(65, 30, 200, 25), "rotation");
-			CreateButton("90 degrees", new Rect(65, 50, 200, 25), "rotation");
+			CreateButton("180 degrees", new Rect(61, 10, 200, 25), "rotation");
+			CreateButton("-90 degrees", new Rect(61, 30, 200, 25), "rotation");
+			CreateButton("90 degrees", new Rect(61, 50, 200, 25), "rotation");
 		}
 
 		private void Update()
@@ -67,7 +67,7 @@ namespace TheLongWho.Tardis.Screen
 				foreach (TardisSystem system in Systems.GetScreenControlSystems())
 				{
 					_systems.Add(system.Name.ToMachineName(), system);
-					CreateButton(system.Name, new Rect(65, y, 200, 25), "systems");
+					CreateButton(system.Name, new Rect(61, y, 200, 25), "systems");
 					y += 20f;
 				}
 				_initialisedSystems = true;
