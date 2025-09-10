@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using TheLongWho.Utilities;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 namespace TheLongWho.Save
 {
@@ -63,6 +62,7 @@ namespace TheLongWho.Save
 				GameObject obj = GameObject.Instantiate(prefab, WorldUtilities.GetLocalObjectPosition(entry.Position), entry.Rotation);
 				SaveController saveable = obj.GetComponent<SaveController>();
 				saveable.ObjectID = entry.ObjectID;
+				saveable.InitialEntry = entry;
 				saveable.LoadSaveEntry(entry);
 			}
 		}

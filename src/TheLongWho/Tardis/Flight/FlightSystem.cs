@@ -10,6 +10,8 @@ namespace TheLongWho.Tardis.Flight
 	{
 		public override string Name => "Flight";
 		public override float EnergyUsage => 2f;
+		public override bool IsActiveByDefault => false;
+
 
 		private ShellController _shell;
 		private Rigidbody _rb;
@@ -66,7 +68,7 @@ namespace TheLongWho.Tardis.Flight
 			player.GetIn(_shell.FakeSeat);
 			_shell.Interior.gameObject.SetActive(false);
 			StateManager.InFlight = true;
-			IsActive = true;
+			base.Activate();
 		}
 
 		public override void Deactivate()
@@ -74,7 +76,7 @@ namespace TheLongWho.Tardis.Flight
 			_shell.Interior.gameObject.SetActive(true);
 			_shell.Interior.SyncPositionToShell();
 			_rb.useGravity = true;
-			IsActive = false;
+			base.Deactivate();
 			fpscontroller player = mainscript.M.player;
 			player.camView = false;
 			player.GetOut(_shell.Interior.transform.TransformPoint(_lastPosition), true);

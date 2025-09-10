@@ -8,6 +8,7 @@ namespace TheLongWho.Tardis.PerceptionFilter
 	internal class PerceptionFilterSystem : TardisSystem
 	{
 		public override string Name => "Perception Filter";
+		public override bool IsScreenControllable => true;
 
 		private ShellController _shell;
 		private float _swapThreshold = 0.95f;
@@ -18,10 +19,9 @@ namespace TheLongWho.Tardis.PerceptionFilter
 		private float _targetAlpha = 1f;
 		private bool _hasOverlayControl = false;
 
-		private void Start()
+		private void Awake()
 		{
-			_shell = GetComponentInChildren<ShellController>();
-			Activate();
+			_shell = GetComponent<ShellController>();
 		}
 
 		public override void Activate()

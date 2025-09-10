@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TheLongWho.Extensions;
 using TheLongWho.Tardis.Shell;
 using TheLongWho.Tardis.System;
 using TheLongWho.Utilities;
@@ -22,6 +23,8 @@ namespace TheLongWho.Tardis.Screen
 		private Button _backButton;
 		private RawImage _screensaver;
 		private List<Button> _buttons = new List<Button>();
+		private bool _initialisedSystems = false;
+		private Dictionary<string, TardisSystem> _systems = new Dictionary<string, TardisSystem>();
 
 		private void Start()
 		{
@@ -38,9 +41,13 @@ namespace TheLongWho.Tardis.Screen
 
 			CreateMenu("main");
 			ShowMenu("main");
-			CreateButton("Destinations", new Rect(65, 50, 200, 25), "main", "destinations");
-			CreateButton("Rotation", new Rect(65, 70, 200, 25), "main", "rotation");
-			CreateButton("Fast return", new Rect(65, 90, 200, 25), "main");
+			CreateButton("Systems", new Rect(61, 40, 200, 25), "main", "systems");
+			CreateButton("Destinations", new Rect(61, 60, 200, 25), "main", "destinations");
+			CreateButton("Rotation", new Rect(61, 80, 200, 25), "main", "rotation");
+			CreateButton("Fast return", new Rect(61, 100, 200, 25), "main");
+
+			CreateMenu("systems");
+			// Can't populate systems menu here, they haven't registered yet.
 
 			CreateMenu("destinations");
 			CreateButton("Starter house", new Rect(65, 10, 200, 25), "destinations");
@@ -53,6 +60,19 @@ namespace TheLongWho.Tardis.Screen
 
 		private void Update()
 		{
+			// Cache screen systems once all systems are registered.
+			if (!_initialisedSystems && Systems.HasRegisterFinished)
+			{
+				float y = 10f;
+				foreach (TardisSystem system in Systems.GetScreenControlSystems())
+				{
+					_systems.Add(system.Name.ToMachineName(), system);
+					CreateButton(system.Name, new Rect(65, y, 200, 25), "systems");
+					y += 20f;
+				}
+				_initialisedSystems = true;
+			}
+
 			if (!_shell.IsInside()) return;
 
 			fpscontroller player = mainscript.M.player;
@@ -77,6 +97,14 @@ namespace TheLongWho.Tardis.Screen
 
 				if (btn.name == "fast_return" && _shell.Materialisation.LastLocation == null)
 					btn.image.color = btn.colors.disabledColor;
+
+				string menu = btn.transform.parent.name;
+				if (menu == "systems")
+				{
+					TardisSystem system = _systems[btn.name];
+					if (!system.IsActive)
+						btn.image.color = btn.colors.selectedColor;
+				}
 			}
 
 			_eventData = new PointerEventData(EventSystem.current)
@@ -92,7 +120,14 @@ namespace TheLongWho.Tardis.Screen
 				var button = _results[0].gameObject.GetComponent<Button>();
 				if (button != null && button.image.color != button.colors.disabledColor)
 				{
-					player.E = button == _backButton ? "Back" : button.name.Contains("trigger_") ? "Open menu" : "Select";
+					string interactText = "Select";
+					if (button == _backButton)
+						interactText = "Back";
+					else if (button.name.Contains("trigger_"))
+						interactText = "Open menu";
+					else if (_currentMenu.name == "systems")
+						interactText = "Toggle system";
+					player.E = interactText;
 					player.BcanE = true;
 					if (Input.GetKeyDown(KeyCode.E))
 						button.onClick.Invoke();
@@ -105,8 +140,14 @@ namespace TheLongWho.Tardis.Screen
 			Button button = Instantiate(TheLongWho.I.UIButton, menu != null ? _menus[menu].transform : _canvas.transform).GetComponent<Button>();
 			SetButtonRect(button.GetComponent<RectTransform>(), position);
 			button.onClick.AddListener(() => OnButtonClick(button));
-			button.name = triggerMenu == null ? name.Replace(" ", "_").ToLowerInvariant() : "trigger_" + triggerMenu;
+			button.name = triggerMenu == null ? name.ToMachineName() : "trigger_" + triggerMenu;
 			button.GetComponentInChildren<TextMeshProUGUI>().text = name;
+
+			// We're not using the colours for their named purposes.
+			// selectedColor for disabled.
+			ColorBlock colors = button.colors;
+			colors.selectedColor = new Color(252 / 255f, 159 / 255f, 159 / 255f);
+			button.colors = colors;
 			_buttons.Add(button);
 			return button;
 		}
@@ -168,6 +209,14 @@ namespace TheLongWho.Tardis.Screen
 					}
 					break;
 
+				case "systems":
+					TardisSystem system = _systems[button.name];
+					if (system.IsActive)
+						system.Deactivate();
+					else
+						system.Activate();
+					break;
+
 				case "destinations":
 					switch (button.name)
 					{
@@ -195,13 +244,14 @@ namespace TheLongWho.Tardis.Screen
 						Quaternion currentRot = _shell.transform.rotation;
 						Quaternion extraRot = Quaternion.Euler(0f, rotation, 0f);
 						Quaternion targetRot = currentRot * extraRot;
-						_shell.Materialisation.Materialise(_shell.transform.position, targetRot);
+						_shell.Materialisation.Materialise(_shell.transform.position, targetRot, shouldSaveLocation: false);
 					}
 					break;
 			}
 
 			// Return back to main menu on selection.
-			ShowMenu("main");
+			if (_currentMenu.name != "systems")
+				ShowMenu("main");
 		}
 	}
 }

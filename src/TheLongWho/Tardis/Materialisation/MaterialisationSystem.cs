@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json.Linq;
+using System.Collections;
+using TheLongWho.Save;
 using TheLongWho.Tardis.Shell;
 using TheLongWho.Tardis.System;
 using TheLongWho.Utilities;
@@ -6,17 +8,22 @@ using UnityEngine;
 
 namespace TheLongWho.Tardis.Materialisation
 {
-	internal class MaterialisationSystem : TardisSystem
+	internal class MaterialisationSystem : TardisSystem, ISaveable
 	{
 		public override string Name => "Materialisation";
+		public string SaveKey => nameof(MaterialisationSystem);
 
 		private ShellController _shell;
 		private Transform _rotor;
 		private Rigidbody _rb;
 		private Coroutine _currentRoutine;
+		private MaterialisationSave _materialisationSave = new MaterialisationSave();
 
 		public State CurrentState = State.Idle;
-		public Location LastLocation { get; private set; }
+		public Location LastLocation {
+			get { return _materialisationSave.LastLocation; }
+			private set { _materialisationSave.LastLocation = value; }
+		}
 
 		public enum Speed
 		{
@@ -36,6 +43,15 @@ namespace TheLongWho.Tardis.Materialisation
 			_shell = GetComponent<ShellController>();
 			_rb = GetComponent<Rigidbody>();
 			_rotor = _shell.Interior.Rotor;
+		}
+
+		public object GetSaveData() => _materialisationSave;
+
+		public void LoadSaveData(object data)
+		{
+			MaterialisationSave materialisationSave = (data as JObject)?.ToObject<MaterialisationSave>();
+			if (materialisationSave == null) return;
+			_materialisationSave = materialisationSave;
 		}
 
 		public void Dematerialise(Speed speed = Speed.Standard, bool shouldSaveLocation = true)

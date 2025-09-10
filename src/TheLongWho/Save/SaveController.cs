@@ -8,6 +8,7 @@ namespace TheLongWho.Save
 	public class SaveController : MonoBehaviour
 	{
 		public string ObjectID;
+		public SaveEntry InitialEntry;
 
 		private List<ISaveable> _saveables;
 
@@ -28,6 +29,15 @@ namespace TheLongWho.Save
 		public void RefetchSaveables()
 		{
 			_saveables = new List<ISaveable>(GetComponentsInChildren<ISaveable>());
+
+			// Re-trigger a save load with new saveables.
+			if (InitialEntry == null) return;
+			foreach (ISaveable saveable in _saveables)
+			{
+				if (InitialEntry.Data.TryGetValue(saveable.SaveKey, out object data))
+					saveable.LoadSaveData(data);
+			}
+			InitialEntry = null;
 		}
 
 		public SaveEntry GetSaveEntry()
