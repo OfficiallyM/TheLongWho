@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections;
+using System.Collections.Generic;
+using TheLongWho.Extensions;
 using TheLongWho.Save;
 using TheLongWho.Tardis.Shell;
 using TheLongWho.Tardis.System;
@@ -23,6 +25,11 @@ namespace TheLongWho.Tardis.Materialisation
 		public Location LastLocation {
 			get { return _materialisationSave.LastLocation; }
 			private set { _materialisationSave.LastLocation = value; }
+		}
+		public Dictionary<string, Location> CustomDestinations
+		{
+			get { return _materialisationSave.CustomDestinations; }
+			private set { _materialisationSave.CustomDestinations = value; }
 		}
 
 		public enum Speed
@@ -71,6 +78,41 @@ namespace TheLongWho.Tardis.Materialisation
 			// Already dematerialised, just materialise.
 			else
 				_currentRoutine = StartCoroutine(MaterialiseRoutine(position, rotation, speed));
+		}
+
+		public void AddCustomDestination(string name, Location location)
+		{
+			foreach (KeyValuePair<string, Location> existing in CustomDestinations)
+			{
+				if (existing.Key == name)
+					return;
+			}
+
+			CustomDestinations.Add(name, location);
+		}
+
+		public void DeleteCustomDestination(string name)
+		{
+			name = name.ToMachineName();
+			foreach (KeyValuePair<string, Location> existing in CustomDestinations)
+			{
+				if (existing.Key.ToMachineName() == name)
+				{
+					CustomDestinations.Remove(existing.Key);
+					return;
+				}
+			}
+		}
+
+		public Location GetCustomDestination(string name)
+		{
+			name = name.ToMachineName();
+			foreach (KeyValuePair<string, Location> existing in CustomDestinations)
+			{
+				if (existing.Key.ToMachineName() == name)
+					return existing.Value;
+			}
+			return null;
 		}
 
 		private IEnumerator DematerialiseRoutine(Speed speed, bool shouldSaveLocation)

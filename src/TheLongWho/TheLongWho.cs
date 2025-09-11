@@ -41,6 +41,11 @@ namespace TheLongWho
 
 		private GameObject[] _toLoad = new GameObject[0];
 
+		private bool _hasUIControl = false;
+		public event Action OnForceReleaseUIControl;
+		public int ScreenWidth;
+		public int ScreenHeight;
+
 		public TheLongWho()
 		{
 			I = this;
@@ -147,11 +152,39 @@ namespace TheLongWho
 				Quaternion rotation = Quaternion.LookRotation(directionToPlayer, Vector3.up);
 				StateManager.LastTardis.Materialisation.Materialise(WorldUtilities.GetGlobalObjectPosition(position), rotation);
 			}
+
+			if (_hasUIControl && !mainscript.M.menu.Menu.activeSelf && Input.GetButtonDown("Cancel"))
+				ToggleUIControl(false);
 		}
 
-		public override void Config()
+		public override void OnGUI()
 		{
-			SettingAPI setting = new SettingAPI(this);
+			// Find screen resolution.
+			ScreenWidth = Screen.width;
+			ScreenHeight = Screen.height;
+			int resX = settingsscript.s.S.IResolutionX;
+			int resY = settingsscript.s.S.IResolutionY;
+			if (resX != ScreenWidth)
+			{
+				ScreenWidth = resX;
+				ScreenHeight = resY;
+			}
+		}
+
+		public void ToggleUIControl(bool? force = null)
+		{
+			if (force.HasValue)
+			{
+				_hasUIControl = force.Value;
+				if (!_hasUIControl)
+					OnForceReleaseUIControl?.Invoke();
+			}
+			else
+				_hasUIControl = !_hasUIControl;
+
+			mainscript.M.crsrLocked = !_hasUIControl;
+			mainscript.M.SetCursorVisible(_hasUIControl);
+			mainscript.M.menu.gameObject.SetActive(!_hasUIControl);
 		}
 	}
 }
