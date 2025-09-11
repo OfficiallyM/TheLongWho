@@ -25,37 +25,39 @@ namespace TheLongWho.Tardis.Screen
 		private List<Button> _buttons = new List<Button>();
 		private bool _initialisedSystems = false;
 		private Dictionary<string, TardisSystem> _systems = new Dictionary<string, TardisSystem>();
+		private Vector2 _canvasSize;
 
 		private void Start()
 		{
 			_shell = GetComponent<ShellController>();
 			_canvas = _shell.Interior.ScreenCanvas;
 			_canvas.worldCamera = mainscript.M.player.Cam;
+			_canvasSize = _canvas.GetComponent<RectTransform>().rect.size;
 
 			GameObject screensaver = Instantiate(TheLongWho.I.UIImage, _canvas.transform);
 			_screensaver = screensaver.GetComponent<RawImage>();
 			_screensaver.texture = TheLongWho.I.ScreenImage;
 
 			// Set up UI.
-			_backButton = CreateButton("<", new Rect(0, 149, 25, 25));
+			_backButton = CreateButton("<", new Rect(0, 145, 15, 15));
 
 			CreateMenu("main");
 			ShowMenu("main");
-			CreateButton("Systems", new Rect(61, 40, 200, 25), "main", "systems");
-			CreateButton("Destinations", new Rect(61, 60, 200, 25), "main", "destinations");
-			CreateButton("Rotation", new Rect(61, 80, 200, 25), "main", "rotation");
-			CreateButton("Fast return", new Rect(61, 100, 200, 25), "main");
+			CreateButton("Systems", new RectPercent(50, 25, 75, 10), "main", "systems");
+			CreateButton("Destinations", new RectPercent(50, 41.67f, 75, 10), "main", "destinations");
+			CreateButton("Rotation", new RectPercent(50, 58.33f, 75, 10), "main", "rotation");
+			CreateButton("Fast return", new RectPercent(50, 75, 75, 10), "main");
 
 			CreateMenu("systems");
 			// Can't populate systems menu here, they haven't registered yet.
 
 			CreateMenu("destinations");
-			CreateButton("Starter house", new Rect(61, 10, 200, 25), "destinations");
+			CreateButton("Starter house", new RectPercent(50, 25, 75, 10), "destinations");
 
 			CreateMenu("rotation");
-			CreateButton("180 degrees", new Rect(61, 10, 200, 25), "rotation");
-			CreateButton("-90 degrees", new Rect(61, 30, 200, 25), "rotation");
-			CreateButton("90 degrees", new Rect(61, 50, 200, 25), "rotation");
+			CreateButton("180 degrees", new RectPercent(50, 25, 75, 10), "rotation");
+			CreateButton("-90 degrees", new RectPercent(50, 50, 75, 10), "rotation");
+			CreateButton("90 degrees", new RectPercent(50, 75, 75, 10), "rotation");
 		}
 
 		private void Update()
@@ -63,12 +65,12 @@ namespace TheLongWho.Tardis.Screen
 			// Cache screen systems once all systems are registered.
 			if (!_initialisedSystems && Systems.HasRegisterFinished)
 			{
-				float y = 10f;
+				float y = 25f;
 				foreach (TardisSystem system in Systems.GetScreenControlSystems())
 				{
 					_systems.Add(system.Name.ToMachineName(), system);
-					CreateButton(system.Name, new Rect(61, y, 200, 25), "systems");
-					y += 20f;
+					CreateButton(system.Name, new RectPercent(50, y, 75, 10), "systems");
+					y += 10f;
 				}
 				_initialisedSystems = true;
 			}
@@ -135,13 +137,15 @@ namespace TheLongWho.Tardis.Screen
 			}
 		}
 
-		private Button CreateButton(string name, Rect position, string menu = null, string triggerMenu = null)
+		private Button CreateButton(string name, Rect position, string menu = null, string triggerMenu = null, bool useMiddleAnchor = false)
 		{
 			Button button = Instantiate(TheLongWho.I.UIButton, menu != null ? _menus[menu].transform : _canvas.transform).GetComponent<Button>();
-			SetButtonRect(button.GetComponent<RectTransform>(), position);
+			SetButtonRect(button.GetComponent<RectTransform>(), position, useMiddleAnchor);
 			button.onClick.AddListener(() => OnButtonClick(button));
 			button.name = triggerMenu == null ? name.ToMachineName() : "trigger_" + triggerMenu;
-			button.GetComponentInChildren<TextMeshProUGUI>().text = name;
+			var label = button.GetComponentInChildren<TextMeshProUGUI>();
+			label.text = name;
+			label.fontSize = triggerMenu == null ? 15 : 18;
 
 			// We're not using the colours for their named purposes.
 			// selectedColor for disabled.
@@ -152,14 +156,38 @@ namespace TheLongWho.Tardis.Screen
 			return button;
 		}
 
-		private void SetButtonRect(RectTransform rt, Rect rect)
+		private Button CreateButton(string name, RectPercent rectPercent, string menu = null, string triggerMenu = null)
 		{
-			rt.anchorMin = new Vector2(0, 1);
-			rt.anchorMax = new Vector2(0, 1);
-			rt.pivot = new Vector2(0, 1);
+			return CreateButton(name, rectPercent.ToRect(_canvasSize), menu, triggerMenu, true);
+		}
 
-			rt.sizeDelta = new Vector2(rect.width, rect.height);
-			rt.anchoredPosition = new Vector2(rect.x / 100f, -(rect.y / 100f));
+		private void SetButtonRect(RectTransform rt, Rect rect, bool useMiddleAnchor)
+		{
+			// Prefab scale is 0.01, so we need to multiply the size by 100.
+			Vector2 size = new Vector2(rect.width, rect.height);
+			if (useMiddleAnchor)
+				size *= 100f;
+			Vector2 pos = new Vector2(rect.x, rect.y);
+
+			if (useMiddleAnchor)
+			{
+				// Center-anchored, pivot in the middle.
+				rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+			}
+			else
+			{
+				// Top-left anchor, pivot in top-left.
+				rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0, 1);
+			}
+			// Unity UI y+ is up, but rects are y+ is down.
+			pos.y = -pos.y;
+
+			// Scale down for absolute positioned elements to make positioning use nicer numbers.
+			if (!useMiddleAnchor)
+				pos /= 100f;
+
+			rt.sizeDelta = size;
+			rt.anchoredPosition = pos;
 		}
 
 		private void CreateMenu(string name)
