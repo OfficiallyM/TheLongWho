@@ -95,6 +95,8 @@ namespace TheLongWho.Tardis.Screen
 			if (distance > 5f)
 			{
 				_currentMenu.SetActive(false);
+				_backButton.gameObject.SetActive(false);
+				_createDestinationButton.gameObject.SetActive(false);
 				_screensaver.gameObject.SetActive(true);
 				return;
 			}
