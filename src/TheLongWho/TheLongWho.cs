@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using TheLongWho.Save;
+using TheLongWho.Sonic;
 using TheLongWho.Tardis.Interior;
 using TheLongWho.Tardis.Shell;
 using TheLongWho.Utilities;
@@ -35,6 +37,8 @@ namespace TheLongWho
 		internal GameObject UIButton;
 		internal GameObject UIText;
 		internal GameObject UIImage;
+		internal GameObject Sonic;
+		internal AudioClip SonicClip;
 
 		public event Action OnCacheRebuild;
 		private float _nextCacheUpdate = 2f;
@@ -45,6 +49,8 @@ namespace TheLongWho
 		public event Action OnForceReleaseUIControl;
 		public int ScreenWidth;
 		public int ScreenHeight;
+
+		internal SonicHelper SonicHelper;
 
 		public TheLongWho()
 		{
@@ -76,8 +82,36 @@ namespace TheLongWho
 			DematerialiseClip = bundle.LoadAsset<AudioClip>("demat.wav");
 			FlightClip = bundle.LoadAsset<AudioClip>("flight.wav");
 
+			Sonic = bundle.LoadAsset<GameObject>("sonicclosed.prefab");
+			SonicClip = bundle.LoadAsset<AudioClip>("sonic.wav");
+
 			bundle.Unload(false);
 			_areAssetsLoaded = true;
+
+			if (itemdatabase.d.glegycsapo.GetComponent<SonicController>() == null)
+			{
+				itemdatabase.d.glegycsapo.AddComponent<SonicController>();
+				itemdatabase.d.glegycsapo.name += " or Sonic Screwdriver";
+			}
+
+			// Create placeholders to show in M-ultiTool mod items category.
+			try
+			{
+				GameObject sonicPlaceholder = new GameObject("SonicPlaceholder");
+				sonicPlaceholder.transform.SetParent(mainscript.M.transform);
+				sonicPlaceholder.SetActive(false);
+				GameObject sonic = new GameObject("Sonic Screwdriver");
+				sonic.transform.SetParent(sonicPlaceholder.transform, false);
+				sonic.AddComponent<SonicSpawner>();
+				itemdatabase.d.items = Enumerable.Append(itemdatabase.d.items, sonic).ToArray();
+			}
+			catch (Exception ex)
+			{
+				Logging.Log($"Failed to create placeholders. Details: {ex}", TLDLoader.Logger.LogLevel.Error);
+			}
+
+			GameObject sonicHelperObj = new GameObject("SonicHelper");
+			SonicHelper = sonicHelperObj.AddComponent<SonicHelper>();
 
 			_toLoad = toLoad.ToArray();
 			SaveManager.Init();

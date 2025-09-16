@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1745169909
+CRC: 731126701
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: b38c9c83081d3c6f960fe01f3bfd3fb9
+    Hash: 32d67d86ac2a3b1f9ac35e6f3a395663
   TypeTreeHash:
     serializedVersion: 2
     Hash: a6e9c272fcfa09a638ff3ad9df98faee
@@ -108,6 +108,7 @@ SerializeReferenceClassIdentifiers:
   ClassName: UnityEngine.UI.SpriteState
 Assets:
 - Assets/UI Prefabs/UIImage.prefab
+- Assets/Sonic/sound/sonic.wav
 - Assets/Tardis/Interiors/type30.prefab
 - Assets/UI Prefabs/UIButton.prefab
 - Assets/Tardis/Interiors/type30.fbx
@@ -117,6 +118,7 @@ Assets:
 - Assets/Tardis/Shells/TARDIS Overlay.fbx
 - Assets/Tardis/Shells/TARDIS.fbx
 - Assets/Tardis/Shells/TARDIS.prefab
+- Assets/Sonic/SonicClosed.prefab
 - Assets/Tardis/Sound/flight.wav
 - Assets/Tardis/Interiors/screenimage.jpg
 - Assets/Tardis/Shells/TARDIS Overlay.prefab

@@ -105,6 +105,8 @@ namespace TheLongWho.Tardis.Shell
 
 			// Trigger a manual save.
 			SaveManager.Save(SaveController, true);
+
+			StateManager.LastTardis = this;
 		}
 
 		private void OnDestroy()

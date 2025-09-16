@@ -65,6 +65,17 @@ namespace TheLongWho.Tardis.Materialisation
 		{
 			if (CurrentState == State.Dematerialised) return;
 			if (_currentRoutine != null) StopCoroutine(_currentRoutine);
+
+			if (speed == Speed.Instant)
+			{
+				CurrentState = State.Dematerialised;
+				_shell.SetShellRendered(false);
+				_rb.useGravity = false;
+				_shell.SetCollidersEnabled(false);
+				_shell.SetOverlayActive(false);
+				return;
+			}
+
 			_currentRoutine = StartCoroutine(DematerialiseRoutine(speed, shouldSaveLocation));
 		}
 
