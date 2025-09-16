@@ -102,8 +102,10 @@ namespace TheLongWho
 				sonicPlaceholder.SetActive(false);
 				GameObject sonic = new GameObject("Sonic Screwdriver");
 				sonic.transform.SetParent(sonicPlaceholder.transform, false);
+				UnityEngine.Object.Instantiate(Sonic, sonic.transform, false).transform.Rotate(0f, 180f, 0f);
 				sonic.AddComponent<SonicSpawner>();
 				itemdatabase.d.items = Enumerable.Append(itemdatabase.d.items, sonic).ToArray();
+				sonic.GetComponentInChildren<Collider>().enabled = false;
 			}
 			catch (Exception ex)
 			{
