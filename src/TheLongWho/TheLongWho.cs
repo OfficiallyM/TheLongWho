@@ -62,8 +62,6 @@ namespace TheLongWho
 			if (_areAssetsLoaded) return;
 			List<GameObject> toLoad = new List<GameObject>();
 			AssetBundle bundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream($"{nameof(TheLongWho)}.thelongwho"));
-			foreach (string asset in bundle.GetAllAssetNames())
-				Logging.Log(asset);
 			Shell = bundle.LoadAsset<GameObject>("tardis.prefab");
 			Shell.AddComponent<ShellController>();
 			toLoad.Add(Shell);
