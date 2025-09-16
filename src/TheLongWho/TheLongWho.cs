@@ -168,25 +168,6 @@ namespace TheLongWho
 				}
 			}
 
-			if (Input.GetKeyDown(KeyCode.Comma))
-			{
-				Vector3 position = mainscript.M.player.lookPoint + Vector3.up * 0.75f;
-				Vector3 directionToPlayer = (mainscript.M.player.transform.position - position).normalized;
-				directionToPlayer.y = 0;
-				Quaternion rotation = Quaternion.LookRotation(directionToPlayer, Vector3.up);
-
-				GameObject.Instantiate(Shell, position, rotation);
-			}
-
-			if (Input.GetKeyDown(KeyCode.Period) && StateManager.LastTardis != null)
-			{
-				Vector3 position = mainscript.M.player.lookPoint;
-				Vector3 directionToPlayer = (mainscript.M.player.transform.position - position).normalized;
-				directionToPlayer.y = 0;
-				Quaternion rotation = Quaternion.LookRotation(directionToPlayer, Vector3.up);
-				StateManager.LastTardis.Materialisation.Materialise(WorldUtilities.GetGlobalObjectPosition(position), rotation);
-			}
-
 			if (_hasUIControl && !mainscript.M.menu.Menu.activeSelf && Input.GetButtonDown("Cancel"))
 				ToggleUIControl(false);
 		}
