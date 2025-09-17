@@ -120,6 +120,15 @@ namespace TheLongWho
 		public override void OnLoad()
 		{
 			SaveManager.LoadAll(_toLoad);
+
+			if (mainscript.M.load)
+				return;
+			// Add sonic component to the correct starter house object.
+			foreach (KeyValuePair<int, tosaveitemscript> keyValuePair in savedatascript.d.toSaveStuff)
+			{
+				if (keyValuePair.Value != null && keyValuePair.Value.id == itemdatabase.d.glegycsapo.GetComponent<tosaveitemscript>().id && keyValuePair.Value.gameObject.GetComponent<SonicController>() == null)
+					keyValuePair.Value.gameObject.AddComponent<SonicController>();
+			}
 		}
 
 		public override void Update()
