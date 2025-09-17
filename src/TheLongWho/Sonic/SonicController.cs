@@ -11,6 +11,7 @@ namespace TheLongWho.Sonic
 	internal class SonicController : MonoBehaviour
 	{
 		public AudioController Audio;
+		public SonicDisplay Display;
 
 		private GameObject _sonic;
 		private Material _tipMaterial;
@@ -18,6 +19,7 @@ namespace TheLongWho.Sonic
 		private pickupable _pickup;
 		private weaponscript _weapon;
 		private bool _wasPulling = false;
+		private bool _positionFixed = false;
 
 		private List<SonicMode> _modes = new List<SonicMode>();
 		private int _currentModeIndex = 0;
@@ -88,13 +90,21 @@ namespace TheLongWho.Sonic
 				_weapon.ammo = ammo;
 				_pickup.weapon = _weapon;
 
+				// Set up display canvas.
+				Display = _sonic.AddComponent<SonicDisplay>();
+
 				// Set up sonic modes.
 				gameObject.AddComponent<SummonTardis>();
 				gameObject.AddComponent<None>();
+				gameObject.AddComponent<Scanner>();
 				gameObject.AddComponent<DisruptElectrics>();
+				gameObject.AddComponent<Break>();
 				_modes.AddRange(GetComponents<SonicMode>());
 				if (_modes.Count > 0)
 					SetMode(0);
+
+				foreach (SonicMode mode in _modes)
+					mode.Sonic = this;
 			}
 			catch (System.Exception ex)
 			{
@@ -117,16 +127,19 @@ namespace TheLongWho.Sonic
 			bool isHolding = player.inHandP == _pickup;
 			bool isEngaged = isPulling && isHolding;
 
+			// Ensure correct hold position when taking out of inventory after a save load.
+			if (!_positionFixed && isHolding && _pickup.transform.position != player.RH.TransformPoint(_pickup.RHP))
+			{
+				player.InvSwitchTo(player.selectedInv);
+				_positionFixed = true;
+			}
+
 			if (_wasPulling != isPulling)
 			{
 				if (!isPulling)
-				{
 					Disengage();
-				}
 				else
-				{
 					Audio.Play("sonic", "buzz", true);
-				}
 			}
 
 			// Track hold duration

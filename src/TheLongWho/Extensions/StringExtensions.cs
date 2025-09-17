@@ -13,5 +13,10 @@ namespace TheLongWho.Extensions
 		{
 			return input.Replace(" ", "_").ToLowerInvariant();
 		}
+
+		public static string Prettify(this string input)
+		{
+			return input.Replace("(Clone)", "").Trim();
+		}
 	}
 }
