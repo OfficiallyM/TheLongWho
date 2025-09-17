@@ -18,7 +18,7 @@ namespace TheLongWho
 		public override string ID => "M_TheLongWho";
 		public override string Name => "The Long Who";
 		public override string Author => "M-";
-		public override string Version => "0.0.1";
+		public override string Version => "0.0.2";
 		public override bool LoadInDB => true;
 		public override bool EchoToGameLog => true;
 		public override bool UseLogger => true;
