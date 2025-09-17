@@ -58,7 +58,7 @@ namespace TheLongWho.Tardis.PerceptionFilter
 		public override void Tick()
 		{
 			// If materialisation is in progress, don't interfere.
-			if (_shell.Materialisation.CurrentState != MaterialisationSystem.State.Idle) return;
+			if (_shell.Materialisation.CurrentState != MaterialisationSystem.State.Idle || _shell.IsInside()) return;
 
 			fpscontroller player = mainscript.M.player;
 
