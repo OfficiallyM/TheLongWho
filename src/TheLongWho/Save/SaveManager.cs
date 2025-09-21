@@ -73,6 +73,11 @@ namespace TheLongWho.Save
 			SerializeSaveData();
 		}
 
+		public static void ResetLoadedState()
+		{
+			_isLoaded = false;
+		}
+
 		/// <summary>
 		/// Read/write data to game save
 		/// <para>Originally from RundensWheelPositionEditor</para>

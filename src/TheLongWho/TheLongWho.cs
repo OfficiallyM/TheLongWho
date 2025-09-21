@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using TheLongWho.Enemies.Angel;
 using TheLongWho.Save;
 using TheLongWho.Sonic;
 using TheLongWho.Tardis.Interior;
@@ -26,19 +27,30 @@ namespace TheLongWho
 
 		internal static TheLongWho I;
 
-		private static bool _areAssetsLoaded = false;
+		// Shell assets.
 		internal GameObject Shell;
 		internal GameObject OverlayShell;
+
+		// Interior assets.
 		internal GameObject Interior;
 		internal Texture ScreenImage;
+
+		// TARDIS audio assets.
 		internal AudioClip MaterialiseClip;
 		internal AudioClip DematerialiseClip;
 		internal AudioClip FlightClip;
+
+		// UI assets.
 		internal GameObject UIButton;
 		internal GameObject UIText;
 		internal GameObject UIImage;
+
+		// Sonic assets.
 		internal GameObject Sonic;
 		internal AudioClip SonicClip;
+
+		// Enemy assets.
+		internal GameObject Angel;
 
 		public event Action OnCacheRebuild;
 		private float _nextCacheUpdate = 2f;
@@ -59,7 +71,6 @@ namespace TheLongWho
 
 		public override void DbLoad()
 		{
-			if (_areAssetsLoaded) return;
 			List<GameObject> toLoad = new List<GameObject>();
 			AssetBundle bundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream($"{nameof(TheLongWho)}.thelongwho"));
 			Shell = bundle.LoadAsset<GameObject>("tardis.prefab");
@@ -83,8 +94,11 @@ namespace TheLongWho
 			Sonic = bundle.LoadAsset<GameObject>("sonicclosed.prefab");
 			SonicClip = bundle.LoadAsset<AudioClip>("sonic.wav");
 
+			Angel = bundle.LoadAsset<GameObject>("angel.prefab");
+			Angel.AddComponent<AngelController>();
+			toLoad.Add(Angel);
+
 			bundle.Unload(false);
-			_areAssetsLoaded = true;
 
 			if (itemdatabase.d.glegycsapo.GetComponent<SonicController>() == null)
 			{
@@ -104,6 +118,14 @@ namespace TheLongWho
 				sonic.AddComponent<SonicSpawner>();
 				itemdatabase.d.items = Enumerable.Append(itemdatabase.d.items, sonic).ToArray();
 				sonic.GetComponentInChildren<Collider>().enabled = false;
+
+				GameObject angelPlaceholder = new GameObject("AngelPlaceholder");
+				angelPlaceholder.transform.SetParent(mainscript.M.transform);
+				angelPlaceholder.SetActive(false);
+				GameObject angel = new GameObject("Weeping Angel");
+				angel.transform.SetParent(angelPlaceholder.transform, false);
+				UnityEngine.Object.Instantiate(Angel, angel.transform, false);
+				itemdatabase.d.items = Enumerable.Append(itemdatabase.d.items, angel).ToArray();
 			}
 			catch (Exception ex)
 			{
@@ -115,6 +137,7 @@ namespace TheLongWho
 
 			_toLoad = toLoad.ToArray();
 			SaveManager.Init();
+			SaveManager.ResetLoadedState();
 		}
 
 		public override void OnLoad()

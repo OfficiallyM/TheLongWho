@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 731126701
+CRC: 3256853529
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 32d67d86ac2a3b1f9ac35e6f3a395663
+    Hash: 30d28f53f3dc1b5363d600fd215deb0c
   TypeTreeHash:
     serializedVersion: 2
-    Hash: a6e9c272fcfa09a638ff3ad9df98faee
+    Hash: 60e715b21fd00587ca503863f47ce324
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -54,6 +54,8 @@ ClassTypes:
 - Class: 128
   Script: {instanceID: 0}
 - Class: 134
+  Script: {instanceID: 0}
+- Class: 137
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
@@ -107,6 +109,7 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.SpriteState
 Assets:
+- Assets/Enemies/Angel/Angel.prefab
 - Assets/UI Prefabs/UIImage.prefab
 - Assets/Sonic/sound/sonic.wav
 - Assets/Tardis/Interiors/type30.prefab
