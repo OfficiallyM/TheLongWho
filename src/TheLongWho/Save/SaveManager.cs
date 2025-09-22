@@ -11,6 +11,7 @@ namespace TheLongWho.Save
 		private static SaveFile _saveFile = new SaveFile();
 		private static List<SaveController> _saves = new List<SaveController>();
 		private static bool _isLoaded = false;
+		private static List<GameObject> _prefabs = new List<GameObject>();
 
 		public static void Init()
 		{
@@ -25,6 +26,8 @@ namespace TheLongWho.Save
 
 		public static void Register(SaveController save) => _saves.Add(save);
 
+		public static void RegisterPrefab(GameObject obj) => _prefabs.Add(obj);
+
 		public static void SaveAll()
 		{
 			foreach (SaveController save in _saves)
@@ -33,11 +36,11 @@ namespace TheLongWho.Save
 			SerializeSaveData();
 		}
 
-		public static void LoadAll(GameObject[] prefabs)
+		public static void LoadAll()
 		{
 			_isLoaded = true;
 			UnserializeSaveData();
-			foreach (GameObject prefab in prefabs)
+			foreach (GameObject prefab in _prefabs)
 				Load(prefab);
 		}
 
@@ -51,10 +54,8 @@ namespace TheLongWho.Save
 			if (commit) SerializeSaveData();
 		}
 
-		public static void Load(GameObject prefab, bool load = false)
+		public static void Load(GameObject prefab)
 		{
-			if (load) UnserializeSaveData();
-
 			foreach (SaveEntry entry in _saveFile.Entries)
 			{
 				if (entry.Name != prefab.name) continue;

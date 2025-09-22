@@ -5,11 +5,14 @@ using System.Reflection;
 using TheLongWho.Enemies.Angel;
 using TheLongWho.Save;
 using TheLongWho.Sonic;
+using TheLongWho.Spawn;
+using TheLongWho.Spawn.Core;
 using TheLongWho.Tardis.Interior;
 using TheLongWho.Tardis.Shell;
 using TheLongWho.Utilities;
 using TLDLoader;
 using UnityEngine;
+using static UnityEngine.UI.CanvasScaler;
 
 namespace TheLongWho
 {
@@ -55,14 +58,15 @@ namespace TheLongWho
 		public event Action OnCacheRebuild;
 		private float _nextCacheUpdate = 2f;
 
-		private GameObject[] _toLoad = new GameObject[0];
-
 		private bool _hasUIControl = false;
 		public event Action OnForceReleaseUIControl;
 		public int ScreenWidth;
 		public int ScreenHeight;
 
 		internal SonicHelper SonicHelper;
+		public SpawnManager SpawnManager;
+
+		public static event Action<buildingscript> OnBuildingItemSpawn;
 
 		public TheLongWho()
 		{
@@ -71,11 +75,15 @@ namespace TheLongWho
 
 		public override void DbLoad()
 		{
-			List<GameObject> toLoad = new List<GameObject>();
+			// Set up any global helpers.
+			GameObject helperObj = new GameObject("TheLongWho");
+			SonicHelper = helperObj.AddComponent<SonicHelper>();
+			SpawnManager = helperObj.AddComponent<SpawnManager>();
+
 			AssetBundle bundle = AssetBundle.LoadFromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream($"{nameof(TheLongWho)}.thelongwho"));
 			Shell = bundle.LoadAsset<GameObject>("tardis.prefab");
 			Shell.AddComponent<ShellController>();
-			toLoad.Add(Shell);
+			SaveManager.RegisterPrefab(Shell);
 			OverlayShell = bundle.LoadAsset<GameObject>("tardis overlay.prefab");
 
 			Interior = bundle.LoadAsset<GameObject>("type30.prefab");
@@ -96,7 +104,16 @@ namespace TheLongWho
 
 			Angel = bundle.LoadAsset<GameObject>("angel.prefab");
 			Angel.AddComponent<AngelController>();
-			toLoad.Add(Angel);
+			SaveManager.RegisterPrefab(Angel);
+			SpawnManager.RegisterSpawn(new SpawnRule(Angel, new List<SpawnLocationRule>()
+			{
+				new SpawnLocationRule(SpawnLocationType.Building, 0.33f, new List<string>()
+				{
+					"mansion",
+					"yellowfoodkut",
+					"nagybenzinkut",
+				}),
+			}));
 
 			bundle.Unload(false);
 
@@ -132,17 +149,19 @@ namespace TheLongWho
 				Logging.Log($"Failed to create placeholders. Details: {ex}", TLDLoader.Logger.LogLevel.Error);
 			}
 
-			GameObject sonicHelperObj = new GameObject("SonicHelper");
-			SonicHelper = sonicHelperObj.AddComponent<SonicHelper>();
+			foreach (var building in itemdatabase.d.buildings)
+			{
+				if (building.GetComponent<BuildingSpawnProvider>() == null)
+					building.AddComponent<BuildingSpawnProvider>();
+			}
 
-			_toLoad = toLoad.ToArray();
 			SaveManager.Init();
 			SaveManager.ResetLoadedState();
 		}
 
 		public override void OnLoad()
 		{
-			SaveManager.LoadAll(_toLoad);
+			SaveManager.LoadAll();
 
 			if (mainscript.M.load)
 				return;
@@ -233,5 +252,8 @@ namespace TheLongWho
 			mainscript.M.SetCursorVisible(_hasUIControl);
 			mainscript.M.menu.gameObject.SetActive(!_hasUIControl);
 		}
+
+		internal static void RaiseOnBuildingItemSpawn(buildingscript building)
+			=> OnBuildingItemSpawn?.Invoke(building);
 	}
 }
