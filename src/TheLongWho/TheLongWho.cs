@@ -12,7 +12,6 @@ using TheLongWho.Tardis.Shell;
 using TheLongWho.Utilities;
 using TLDLoader;
 using UnityEngine;
-using static UnityEngine.UI.CanvasScaler;
 
 namespace TheLongWho
 {
@@ -55,17 +54,21 @@ namespace TheLongWho
 		// Enemy assets.
 		internal GameObject Angel;
 
+		// Caching.
 		public event Action OnCacheRebuild;
 		private float _nextCacheUpdate = 2f;
 
+		// UI.
 		private bool _hasUIControl = false;
 		public event Action OnForceReleaseUIControl;
 		public int ScreenWidth;
 		public int ScreenHeight;
 
+		// Global helpers.
 		internal SonicHelper SonicHelper;
 		public SpawnManager SpawnManager;
 
+		// Static events.
 		public static event Action<buildingscript> OnBuildingItemSpawn;
 
 		public TheLongWho()
