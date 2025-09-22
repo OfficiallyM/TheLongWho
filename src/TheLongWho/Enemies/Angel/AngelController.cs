@@ -16,7 +16,6 @@ namespace TheLongWho.Enemies.Angel
 		private bool _justMoved = false;
 		private GameObject _target;
 
-		private const float LockRadius = 20f;
 		private const float UnlockRadius = 100f;
 		private const float AttackRadius = 1.5f;
 		private const float KillRadius = 1f;
@@ -46,6 +45,10 @@ namespace TheLongWho.Enemies.Angel
 			// Add a dummy tosaveitemscript to allow M-ultiTool to delete.
 			gameObject.AddComponent<tosaveitemscript>();
 
+			// Ensure upright on spawn.
+			Vector3 euler = transform.eulerAngles;
+			transform.rotation = Quaternion.Euler(0f, euler.y, 0f);
+
 			// Trigger a manual save.
 			SaveManager.Save(SaveController, true);
 		}
@@ -59,7 +62,7 @@ namespace TheLongWho.Enemies.Angel
 			fpscontroller player = mainscript.M.player;
 
 			// Find target.
-			if (_target == null && !IsDead(player.gameObject) && Vector3.Distance(transform.position, player.transform.position) < LockRadius)
+			if (_target == null && IsObservedByPlayer() && !IsDead(player.gameObject))
 			{
 				_target = player.gameObject;
 			}
@@ -108,7 +111,7 @@ namespace TheLongWho.Enemies.Angel
 			}
 
 			// Keep on ground.
-			if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out RaycastHit hit, 3f))
+			if (Physics.Raycast(transform.position + Vector3.up * 0.01f, Vector3.down, out RaycastHit hit, float.MaxValue))
 				transform.position = new Vector3(transform.position.x, hit.point.y, transform.position.z);
 		}
 
@@ -154,6 +157,11 @@ namespace TheLongWho.Enemies.Angel
 			return false;
 		}
 
+		private bool IsObservedByPlayer()
+		{
+			return IsVisibleFrom(mainscript.M.player.Cam);
+		}
+
 		private bool IsVisibleFrom(Camera cam)
 		{
 			return IsVisibleFrom(gameObject, cam);
@@ -166,24 +174,36 @@ namespace TheLongWho.Enemies.Angel
 			Renderer renderer = obj.GetComponentInChildren<Renderer>();
 			if (renderer == null) return false;
 
-			Vector3 targetPos = renderer.bounds.center;
-			Vector3 viewportPos = cam.WorldToViewportPoint(targetPos);
-
-			// Check if within the viewport rectangle and in front of the camera.
-			if (viewportPos.z <= 0f ||
-				viewportPos.x < 0f || viewportPos.x > 1f ||
-				viewportPos.y < 0f || viewportPos.y > 1f)
+			Bounds bounds = renderer.bounds;
+			Vector3[] testPoints =
 			{
-				return false;
-			}
+				bounds.center,
+				bounds.min,
+				bounds.max,
+				new Vector3(bounds.min.x, bounds.min.y, bounds.max.z),
+				new Vector3(bounds.min.x, bounds.max.y, bounds.min.z),
+				new Vector3(bounds.max.x, bounds.min.y, bounds.min.z),
+				new Vector3(bounds.max.x, bounds.max.y, bounds.min.z),
+				new Vector3(bounds.min.x, bounds.max.y, bounds.max.z),
+				new Vector3(bounds.max.x, bounds.min.y, bounds.max.z)
+			};
 
-			// Line of sight check.
-			Vector3 camPos = cam.transform.position;
-			Vector3 dir = targetPos - camPos;
-			foreach (RaycastHit hit in Physics.RaycastAll(camPos, dir.normalized, dir.magnitude))
+			foreach (var targetPos in testPoints)
 			{
-				if (hit.collider.transform.IsChildOf(obj.transform)) 
-					return true;
+				// Check if generally in front of the camera.
+				Vector3 toTarget = (targetPos - cam.transform.position).normalized;
+				float dot = Vector3.Dot(cam.transform.forward, toTarget);
+				if (dot <= 0.5f) continue;
+
+				// Line of sight check.
+				Vector3 camPos = cam.transform.position + cam.transform.forward * 2f;
+				Vector3 dir = targetPos - camPos;
+
+				if (Physics.Raycast(camPos, dir.normalized, out RaycastHit hit, dir.magnitude))
+				{
+					if (hit.collider.transform.IsChildOf(obj.transform))
+						return true;
+				}
 			}
 
 			return false;
@@ -193,7 +213,7 @@ namespace TheLongWho.Enemies.Angel
 		{
 			if (_target == null) return;
 			Vector3 targetPos = _target.transform.position;
-			targetPos.y = transform.position.y;
+			targetPos.y += 2f;
 			transform.position = Vector3.MoveTowards(transform.position, targetPos, MoveSpeed * Time.deltaTime);
 			LookAtFlat(_target.transform);
 		}
