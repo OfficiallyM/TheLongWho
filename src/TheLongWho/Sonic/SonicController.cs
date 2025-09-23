@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using TheLongWho.Audio;
+using TheLongWho.Common;
 using TheLongWho.Sonic.Modes;
 using TheLongWho.Utilities;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace TheLongWho.Sonic
 	internal class SonicController : MonoBehaviour
 	{
 		public AudioController Audio;
-		public SonicDisplay Display;
+		public WorldspaceDisplay Display;
 
 		private GameObject _sonic;
 		private Material _tipMaterial;
@@ -91,7 +92,7 @@ namespace TheLongWho.Sonic
 				_pickup.weapon = _weapon;
 
 				// Set up display canvas.
-				Display = _sonic.AddComponent<SonicDisplay>();
+				Display = _sonic.AddComponent<WorldspaceDisplay>();
 
 				// Set up sonic modes.
 				gameObject.AddComponent<SummonTardis>();

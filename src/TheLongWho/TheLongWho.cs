@@ -29,6 +29,9 @@ namespace TheLongWho
 
 		internal static TheLongWho I;
 
+		// Settings.
+		internal bool DisableHelp = false;
+
 		// Shell assets.
 		internal GameObject Shell;
 		internal GameObject OverlayShell;
@@ -238,6 +241,12 @@ namespace TheLongWho
 				ScreenWidth = resX;
 				ScreenHeight = resY;
 			}
+		}
+
+		public override void Config()
+		{
+			SettingAPI setting = new SettingAPI(this);
+			DisableHelp = setting.GUICheckbox(DisableHelp, "Disable help popups", 10, 10);
 		}
 
 		public void ToggleUIControl(bool? force = null)

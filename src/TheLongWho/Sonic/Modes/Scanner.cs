@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TheLongWho.Common;
 using TheLongWho.Extensions;
 using UnityEngine;
 
@@ -43,7 +44,7 @@ namespace TheLongWho.Sonic.Modes
 					text.Add($"Condition: {conditionDisplay}%");
 				}
 
-				Sonic.Display.ShowMessages(text);
+				Sonic.Display.RenderMessage(new WorldspaceDisplay.Message(text));
 			}
 		}
 	}

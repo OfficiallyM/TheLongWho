@@ -1,4 +1,6 @@
-﻿using TheLongWho.Tardis.Materialisation;
+﻿using System.Collections.Generic;
+using TheLongWho.Common;
+using TheLongWho.Tardis.Materialisation;
 using TheLongWho.Tardis.Shell;
 using TheLongWho.Tardis.System;
 using TheLongWho.Utilities;
@@ -69,6 +71,19 @@ namespace TheLongWho.Tardis.Flight
 			_shell.Interior.gameObject.SetActive(false);
 			StateManager.InFlight = true;
 			base.Activate();
+
+			if (!TheLongWho.I.DisableHelp)
+				_shell.Display.RenderMessage(new WorldspaceDisplay.Message(new List<string>()
+				{
+					"--- Flight controls ---",
+					"E - Exit flight mode",
+					"F - Take off/Land",
+					"R - Toggle shell rotation",
+					"WASD - Move",
+					"Space - Fly up",
+					"Control - Fly down",
+					"Left shift - Speed boost",
+				}, 20, 0.01f));
 		}
 
 		public override void Deactivate()
@@ -114,6 +129,7 @@ namespace TheLongWho.Tardis.Flight
 					_angularVelocity = _rb.angularVelocity;
 					_shell.StartLampFlash();
 					_shell.Audio.Play("shell", "flight", true, fadeTime: 0.5f);
+					_shell.Display.ClearMessage();
 				}
 				else
 				{

@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TheLongWho.Audio;
+using TheLongWho.Common;
 using TheLongWho.Save;
 using TheLongWho.Tardis.Flight;
 using TheLongWho.Tardis.Interior;
@@ -28,6 +30,7 @@ namespace TheLongWho.Tardis.Shell
 		public Collider[] Colliders;
 		public Renderer[] Renderers;
 		public GameObject OverlayShell;
+		public WorldspaceDisplay Display;
 
 		private Material _lampMaterial;
 		private Material _overlayLampMaterial;
@@ -102,6 +105,12 @@ namespace TheLongWho.Tardis.Shell
 				WorldUtilities.TeleportPlayerSafe(GetSafeExitPoint());
 				_shellSave.IsInside = false;
 			}
+
+			// Set up help display.
+			Display = gameObject.AddComponent<WorldspaceDisplay>();
+			Display.SetPosition(new Vector3(0, 2.9f, 0));
+			Display.SetMaxWidth(500);
+			Display.SetFontSize(40);
 
 			// Trigger a manual save.
 			SaveManager.Save(SaveController, true);
