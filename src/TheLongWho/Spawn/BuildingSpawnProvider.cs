@@ -22,6 +22,7 @@ namespace TheLongWho.Spawn
 		private void Awake()
 		{
 			_building = GetComponent<buildingscript>();
+			if (_building == null) return;
 			_buildingName = _building.name.Prettify().ToLowerInvariant();
 		}
 
