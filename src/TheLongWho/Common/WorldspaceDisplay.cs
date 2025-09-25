@@ -137,6 +137,10 @@ namespace TheLongWho.Common
 
 		public void ClearMessage()
 		{
+			// No text to clear, return early.
+			if (string.IsNullOrEmpty(_text?.text))
+				return;
+
 			if (_displayRoutine != null)
 				StopCoroutine(_displayRoutine);
 
