@@ -32,3 +32,6 @@ You can just find a new one, the TARDIS is linked to you, not the sonic itself
 
 **How do I kill the Weeping Angel?**\
 Can you kill stone?
+
+
+![20250923211438_1](https://github.com/user-attachments/assets/fbfb206d-9eb5-43ec-b5ca-0a1c174f1835)
