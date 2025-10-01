@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3256853529
+CRC: 4167316136
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 30d28f53f3dc1b5363d600fd215deb0c
+    Hash: 3eeebdf3388bf1dc5f59d7a9ae2257d4
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 60e715b21fd00587ca503863f47ce324
+    Hash: db80a948353d3985d3d383a78e39e37c
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -56,6 +56,10 @@ ClassTypes:
 - Class: 134
   Script: {instanceID: 0}
 - Class: 137
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
@@ -123,6 +127,7 @@ Assets:
 - Assets/Tardis/Shells/TARDIS.prefab
 - Assets/Sonic/SonicClosed.prefab
 - Assets/Tardis/Sound/flight.wav
+- Assets/Regeneration/Regeneration.prefab
 - Assets/Tardis/Interiors/screenimage.jpg
 - Assets/Tardis/Shells/TARDIS Overlay.prefab
 Dependencies: []

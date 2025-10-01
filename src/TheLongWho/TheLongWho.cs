@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using TheLongWho.Enemies.Angel;
+using TheLongWho.Player;
 using TheLongWho.Save;
 using TheLongWho.Sonic;
 using TheLongWho.Spawn;
@@ -56,6 +57,9 @@ namespace TheLongWho
 
 		// Enemy assets.
 		internal GameObject Angel;
+
+		// Regeneration assets.
+		internal GameObject RegenerationParticles;
 
 		// Caching.
 		public event Action OnCacheRebuild;
@@ -121,6 +125,8 @@ namespace TheLongWho
 				}),
 			}));
 
+			RegenerationParticles = bundle.LoadAsset<GameObject>("regeneration.prefab");
+
 			bundle.Unload(false);
 
 			if (itemdatabase.d.glegycsapo.GetComponent<SonicController>() == null)
@@ -128,6 +134,9 @@ namespace TheLongWho
 				itemdatabase.d.glegycsapo.AddComponent<SonicController>();
 				itemdatabase.d.glegycsapo.name += " or Sonic Screwdriver";
 			}
+
+			if (mainscript.M.player.GetComponent<Regeneration>() == null)
+				mainscript.M.player.gameObject.AddComponent<Regeneration>();
 
 			// Create placeholders to show in M-ultiTool mod items category.
 			try

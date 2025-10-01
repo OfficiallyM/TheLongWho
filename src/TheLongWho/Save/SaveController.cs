@@ -10,6 +10,7 @@ namespace TheLongWho.Save
 	{
 		public string ObjectID;
 		public SaveEntry InitialEntry;
+		public bool RequiresInstantiation { get; set; } = true;
 
 		private List<ISaveable> _saveables;
 
@@ -49,10 +50,15 @@ namespace TheLongWho.Save
 				{
 					Name = gameObject.name.Prettify(),
 					ObjectID = ObjectID,
-					Position = WorldUtilities.GetGlobalObjectPosition(transform.position),
-					Rotation = transform.rotation,
+					RequiresInstantiation = RequiresInstantiation,
 					Data = new Dictionary<string, object>()
 				};
+
+				if (RequiresInstantiation)
+				{
+					entry.Position = WorldUtilities.GetGlobalObjectPosition(transform.position);
+					entry.Rotation = transform.rotation;
+				}
 
 				foreach (ISaveable saveable in _saveables)
 				{
@@ -67,8 +73,10 @@ namespace TheLongWho.Save
 
 		public void LoadSaveEntry(SaveEntry entry)
 		{
-			transform.position = WorldUtilities.GetLocalObjectPosition(entry.Position);
-			transform.rotation = entry.Rotation;
+			if (entry.Position.HasValue)
+				transform.position = WorldUtilities.GetLocalObjectPosition(entry.Position.Value);
+			if (entry.Rotation.HasValue)
+				transform.rotation = entry.Rotation.Value;
 
 			foreach (ISaveable saveable in _saveables)
 			{

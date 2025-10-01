@@ -38,10 +38,10 @@ namespace TheLongWho.Save
 
 		public static void LoadAll()
 		{
-			_isLoaded = true;
 			UnserializeSaveData();
 			foreach (GameObject prefab in _prefabs)
 				Load(prefab);
+			_isLoaded = true;
 		}
 
 		public static void Save(SaveController save, bool commit = false)
@@ -58,13 +58,31 @@ namespace TheLongWho.Save
 		{
 			foreach (SaveEntry entry in _saveFile.Entries)
 			{
-				if (entry.Name != prefab.name) continue;
+				try
+				{
+					GameObject obj;
+					if (entry.RequiresInstantiation)
+					{
+						if (entry.Name != prefab.name) continue;
+						if (!entry.Position.HasValue || !entry.Rotation.HasValue) continue;
 
-				GameObject obj = GameObject.Instantiate(prefab, WorldUtilities.GetLocalObjectPosition(entry.Position), entry.Rotation);
-				SaveController saveable = obj.GetComponent<SaveController>();
-				saveable.ObjectID = entry.ObjectID;
-				saveable.InitialEntry = entry;
-				saveable.LoadSaveEntry(entry);
+						obj = GameObject.Instantiate(prefab, WorldUtilities.GetLocalObjectPosition(entry.Position.Value), entry.Rotation.Value);
+					}
+					else
+						obj = prefab;
+
+					SaveController saveable = obj.GetComponent<SaveController>();
+					if (saveable != null)
+					{
+						saveable.ObjectID = entry.ObjectID;
+						saveable.InitialEntry = entry;
+						saveable.LoadSaveEntry(entry);
+					}
+				}
+				catch (Exception ex)
+				{
+					Logging.Log($"Load error for '{entry.Name}'. Details: {ex}", TLDLoader.Logger.LogLevel.Error);
+				}
 			}
 		}
 

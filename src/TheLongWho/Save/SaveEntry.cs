@@ -7,8 +7,9 @@ namespace TheLongWho.Save
 	{
 		public string Name { get; set; }
 		public string ObjectID;
-		public Vector3 Position;
-		public Quaternion Rotation;
+		public bool RequiresInstantiation { get; set; } = true;
+		public Vector3? Position;
+		public Quaternion? Rotation;
 		public Dictionary<string, object> Data;
 	}
 
