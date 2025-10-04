@@ -98,6 +98,7 @@ namespace TheLongWho.Sonic
 				gameObject.AddComponent<SummonTardis>();
 				gameObject.AddComponent<None>();
 				gameObject.AddComponent<Scanner>();
+				gameObject.AddComponent<SelfScanner>();
 				gameObject.AddComponent<DisruptElectrics>();
 				gameObject.AddComponent<Break>();
 				_modes.AddRange(GetComponents<SonicMode>());

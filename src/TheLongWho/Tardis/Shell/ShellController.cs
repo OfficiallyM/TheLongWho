@@ -20,6 +20,8 @@ namespace TheLongWho.Tardis.Shell
 	{
 		public string SaveKey => "Shell";
 		public static GameObject InteriorPrefab;
+		public static event Action<ShellController> OnTardisEnter;
+		public static event Action<ShellController> OnTardisExit;
 		public InteriorController Interior;
 		public AudioController Audio;
 		public SaveController SaveController;
@@ -147,6 +149,8 @@ namespace TheLongWho.Tardis.Shell
 			StateManager.LastTardis = this;
 			_shellSave.IsInside = true;
 			SaveManager.Save(SaveController, true);
+
+			OnTardisEnter?.Invoke(this);
 		}
 
 		public void Exit()
@@ -155,6 +159,7 @@ namespace TheLongWho.Tardis.Shell
 			WorldUtilities.TeleportPlayer(GetSafeExitPoint());
 			_shellSave.IsInside = false;
 			SaveManager.Save(SaveController, true);
+			OnTardisExit?.Invoke(this);
 		}
 
 		public bool CanEnter()

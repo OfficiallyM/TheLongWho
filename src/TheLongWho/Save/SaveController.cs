@@ -84,5 +84,10 @@ namespace TheLongWho.Save
 					saveable.LoadSaveData(data);
 			}
 		}
+
+		public void Save()
+		{
+			SaveManager.Save(this, true);
+		}
 	}
 }

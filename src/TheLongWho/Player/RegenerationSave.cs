@@ -2,6 +2,7 @@
 {
 	public class RegenerationSave
 	{
-		public int? Regenerations;
+		public int? Regenerations { get; set; } = 12;
+		public bool CanRegenerate { get; set; } = false;
 	}
 }
