@@ -48,6 +48,9 @@ namespace TheLongWho.Tardis.Shell
 
 		private void Start()
 		{
+			// Don't allow more than one TARDIS to spawn.
+			if (StateManager.LastTardis != null) return;
+
 			// Find colliders and renderers before interior is created to avoid
 			// finding anything interior-related.
 			Colliders = GetComponentsInChildren<Collider>();
