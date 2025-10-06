@@ -4,9 +4,10 @@ using UnityEngine;
 
 namespace TheLongWho.Enemies.Angel
 {
-	public class AngelController : MonoBehaviour
+	public class AngelController : EnemyController
 	{
 		public SaveController SaveController;
+		public override string Name => "Weeping Angel";
 
 		private GameObject _angelIdle;
 		private GameObject _angelAttack;

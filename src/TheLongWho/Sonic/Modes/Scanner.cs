@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using TheLongWho.Common;
+using TheLongWho.Enemies;
+using TheLongWho.Enemies.Angel;
 using TheLongWho.Extensions;
 using UnityEngine;
 
@@ -21,7 +23,16 @@ namespace TheLongWho.Sonic.Modes
 				string name = root.name.Prettify();
 				if (name.StartsWith("G_") || name == "GameObject") return;
 
-				text.Add($"Object: {name}");
+				EnemyController enemy = root.GetComponentInParent<EnemyController>();
+				if (enemy != null)
+				{
+					text.Add(enemy.Name);
+					if (enemy is AngelController)
+						text.Add("Don't blink. Blink and you're dead.");
+				}
+				else
+					text.Add($"Object: {name}");
+
 				text.Add($"Distance: {Vector3.Distance(root.position, mainscript.M.player.transform.position).ToString("F2")}m");
 
 				breakablescript breakable = root.GetComponentInParent<breakablescript>();
