@@ -12,6 +12,9 @@ namespace TheLongWho.Sonic.Modes
 
 		public override void OnEngage()
 		{
+			// Prevent TARDIS summoning inside itself.
+			if (StateManager.LastTardis.IsInside()) return;
+
 			StartCoroutine(SpawnSummon());
 		}
 
