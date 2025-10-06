@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using TheLongWho.Extensions;
 using TheLongWho.Utilities;
 using UnityEngine;
 
@@ -56,14 +57,16 @@ namespace TheLongWho.Save
 
 		public static void Load(GameObject prefab)
 		{
+			string name = prefab.name.Prettify();
 			foreach (SaveEntry entry in _saveFile.Entries)
 			{
 				try
 				{
+					if (entry.Name != name) continue;
+
 					GameObject obj;
 					if (entry.RequiresInstantiation)
 					{
-						if (entry.Name != prefab.name) continue;
 						if (!entry.Position.HasValue || !entry.Rotation.HasValue) continue;
 
 						obj = GameObject.Instantiate(prefab, WorldUtilities.GetLocalObjectPosition(entry.Position.Value), entry.Rotation.Value);

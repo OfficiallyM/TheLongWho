@@ -68,7 +68,6 @@ namespace TheLongWho.Tardis.Flight
 			player.transform.position = transform.position + Vector3.up * 1f;
 			_shell.FakeSeat.RB = null;
 			player.GetIn(_shell.FakeSeat);
-			_shell.Interior.gameObject.SetActive(false);
 			StateManager.InFlight = true;
 			base.Activate();
 

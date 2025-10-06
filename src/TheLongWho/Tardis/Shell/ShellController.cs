@@ -270,6 +270,7 @@ namespace TheLongWho.Tardis.Shell
 			GameObject interior = Instantiate(InteriorPrefab);
 			Interior = interior.GetComponent<InteriorController>();
 			Interior.Shell = this;
+			SaveManager.Load(interior);
 			Interior.SyncPositionToShell();
 		}
 
