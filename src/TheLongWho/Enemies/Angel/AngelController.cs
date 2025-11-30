@@ -23,7 +23,7 @@ namespace TheLongWho.Enemies.Angel
 		private const float MoveSpeed = 2f;
 
 		private static List<AngelController> _angels = new List<AngelController>();
-		
+
 		public enum AngelState
 		{
 			Idle,
@@ -172,42 +172,69 @@ namespace TheLongWho.Enemies.Angel
 		{
 			if (cam == null) return false;
 
-			Renderer renderer = obj.GetComponentInChildren<Renderer>();
-			if (renderer == null) return false;
+			Plane[] planes = GeometryUtility.CalculateFrustumPlanes(cam);
+			Collider collider = obj.GetComponentInChildren<Collider>();
 
-			Bounds bounds = renderer.bounds;
-			Vector3[] testPoints =
+			if (!GeometryUtility.TestPlanesAABB(planes, collider.bounds))
+				return false;
+
+			Vector3 camPos = cam.transform.position + cam.transform.forward * 0.2f;
+
+			float distance = Vector3.Distance(camPos, transform.position);
+			if (distance > 150f)
+				return false;
+
+			Vector3[] points = GetBoundingPoints(collider.bounds);
+			int pointsHidden = 0;
+
+			foreach (Vector3 point in points)
 			{
-				bounds.center,
-				bounds.min,
-				bounds.max,
-				new Vector3(bounds.min.x, bounds.min.y, bounds.max.z),
-				new Vector3(bounds.min.x, bounds.max.y, bounds.min.z),
-				new Vector3(bounds.max.x, bounds.min.y, bounds.min.z),
-				new Vector3(bounds.max.x, bounds.max.y, bounds.min.z),
-				new Vector3(bounds.min.x, bounds.max.y, bounds.max.z),
-				new Vector3(bounds.max.x, bounds.min.y, bounds.max.z)
-			};
+				Vector3 direction = point - camPos;
+				float targetDistance = Vector3.Distance(point, camPos);
 
-			foreach (var targetPos in testPoints)
-			{
-				// Check if generally in front of the camera.
-				Vector3 toTarget = (targetPos - cam.transform.position).normalized;
-				float dot = Vector3.Dot(cam.transform.forward, toTarget);
-				if (dot <= 0.5f) continue;
-
-				// Line of sight check.
-				Vector3 camPos = cam.transform.position + cam.transform.forward * 2f;
-				Vector3 dir = targetPos - camPos;
-
-				if (Physics.Raycast(camPos, dir.normalized, out RaycastHit hit, dir.magnitude))
+				if (Physics.Raycast(camPos, direction.normalized, out RaycastHit hit, direction.magnitude))
 				{
-					if (hit.collider.transform.IsChildOf(obj.transform))
-						return true;
+					if (!hit.collider.transform.IsChildOf(obj.transform))
+						pointsHidden++;
 				}
 			}
 
+			if (pointsHidden >= points.Length)
+				return false;
+
+			return true;
+		}
+
+		private bool IsPointCovered(Camera cam, Vector3 targetDirection, float targetDistance)
+		{
+			RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, targetDirection, 100f);
+
+			foreach (RaycastHit hit in hits)
+			{
+				float distance = Vector3.Distance(cam.transform.position, hit.point);
+
+				if (distance < targetDistance)
+					return true;
+			}
+
 			return false;
+		}
+
+		private Vector3[] GetBoundingPoints(Bounds bounds)
+		{
+			Vector3[] boundingPoints =
+			{
+				bounds.min,
+				bounds.max,
+				new Vector3( bounds.min.x, bounds.min.y, bounds.max.z ),
+				new Vector3( bounds.min.x, bounds.max.y, bounds.min.z ),
+				new Vector3( bounds.max.x, bounds.min.y, bounds.min.z ),
+				new Vector3( bounds.min.x, bounds.max.y, bounds.max.z ),
+				new Vector3( bounds.max.x, bounds.min.y, bounds.max.z ),
+				new Vector3( bounds.max.x, bounds.max.y, bounds.min.z )
+			};
+
+			return boundingPoints;
 		}
 
 		private void MoveTowardTarget()
